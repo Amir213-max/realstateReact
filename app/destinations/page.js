@@ -5,16 +5,32 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SectionHeader from '@/components/SectionHeader';
 import DestinationCard from '@/components/Cards/DestinationCard';
-import destinationsData from '@/data/destinations.json';
+import { useRegions } from '@/hooks/useGraphQL';
 
 export default function DestinationsPage() {
   const { language, t } = useLanguage();
+  const { regions: destinationsData, loading } = useRegions();
   const isRTL = language === 'ar';
 
   const translations = {
     title: { ar: 'جميع الوجهات', en: 'All Destinations' },
     subtitle: { ar: 'اكتشف جميع الوجهات العقارية المتاحة', en: 'Discover all available real estate destinations' },
   };
+
+  if (loading) {
+    return (
+      <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f0cb8e] mx-auto mb-4"></div>
+            <p className="text-[#6D6D6D]">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`}>

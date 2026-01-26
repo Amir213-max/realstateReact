@@ -32,7 +32,7 @@ export default function UnitCard({ unit }) {
               {unit.area} {language === 'ar' ? 'م²' : 'm²'}
             </div>
             <div>
-              <span className="font-semibold">{language === 'ar' ? 'الدور:' : 'Floor:'}</span> {unit.floor}
+              <span className="font-semibold">{language === 'ar' ? 'النوع:' : 'Type:'}</span> {unit.type || '-'}
             </div>
             <div>
               <span className="font-semibold">{language === 'ar' ? 'الغرف:' : 'Bedrooms:'}</span> {unit.bedrooms}

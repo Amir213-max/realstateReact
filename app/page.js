@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
@@ -10,8 +10,7 @@ import SectionHeader from '@/components/SectionHeader';
 import ProjectCard from '@/components/Cards/ProjectCard';
 import DestinationCard from '@/components/Cards/DestinationCard';
 import Button from '@/components/ui/Button';
-import projectsData from '@/data/projects.json';
-import destinationsData from '@/data/destinations.json';
+import { useProjects, useRegions, useProjectsSimple } from '@/hooks/useGraphQL';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -19,6 +18,9 @@ import 'swiper/css/navigation';
 
 export default function Home() {
   const { language, t } = useLanguage();
+  const { projects: allProjects, loading: projectsLoading } = useProjects();
+  const { projects: simpleProjects, loading: simpleProjectsLoading } = useProjectsSimple();
+  const { regions: destinationsData, loading: regionsLoading } = useRegions();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDestination, setSelectedDestination] = useState('');
   const [searchTab, setSearchTab] = useState('compounds'); // 'compounds' or 'units'
@@ -136,14 +138,46 @@ export default function Home() {
     },
   ];
 
-  const featuredProjects = projectsData.slice(0, 6);
-  const newProjects = projectsData.slice(0, 3);
-  const mostSearchedProjects = projectsData.slice(0, 6);
+  // Use simple projects query for homepage display
+  const displayProjects = simpleProjects.length > 0 ? simpleProjects : allProjects;
+  const featuredProjects = displayProjects.slice(0, 6);
+  const newProjects = displayProjects.slice(0, 3);
+  const mostSearchedProjects = displayProjects.slice(0, 6);
+  
+  // Log projects output to console
+  useEffect(() => {
+    if (simpleProjects.length > 0) {
+      console.group('🏠 HOME PAGE - Projects Display');
+      console.log('Total Projects:', simpleProjects.length);
+      console.log('Featured Projects (first 6):', featuredProjects);
+      console.log('New Projects (first 3):', newProjects);
+      console.log('Most Searched Projects (first 6):', mostSearchedProjects);
+      console.log('Full Projects Array:', simpleProjects);
+      console.groupEnd();
+    }
+  }, [simpleProjects, featuredProjects, newProjects, mostSearchedProjects]);
+  
   const heroImages = [
     'https://png.pngtree.com/thumb_back/fw800/background/20240601/pngtree-real-estate-luxury-building-sale-property-background-images-image_15851318.jpg',
     'https://th.bing.com/th/id/OIP.Jy16vSGLOrlRWJ-2BrVMrgHaFj?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3',
     '/assets/brand/images/shutterstock_2558087881.jpg',
   ];
+
+  // Show loading state without affecting layout
+  if (projectsLoading || regionsLoading) {
+    return (
+      <div className={`min-h-screen bg-[#efefef] ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f0cb8e] mx-auto mb-4"></div>
+            <p className="text-[#6D6D6D]">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen bg-[#efefef] ${isRTL ? 'rtl' : 'ltr'}`}>

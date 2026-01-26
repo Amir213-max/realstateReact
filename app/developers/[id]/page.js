@@ -8,16 +8,35 @@ import SectionHeader from '@/components/SectionHeader';
 import ProjectCard from '@/components/Cards/ProjectCard';
 import Badge from '@/components/Badge';
 import Image from 'next/image';
-import developersData from '@/data/developers.json';
-import projectsData from '@/data/projects.json';
+import { useDeveloper, useProjects } from '@/hooks/useGraphQL';
 
 export default function DeveloperDetailPage({ params }) {
   const { language, t } = useLanguage();
   const resolvedParams = use(params);
   const developerId = parseInt(resolvedParams.id);
-  const developer = developersData.find((d) => d.id === developerId);
-  const projects = projectsData.filter((p) => p.developerId === developerId);
+  const { developer: developerData, loading: developerLoading } = useDeveloper(developerId);
+  const { projects: allProjects, loading: projectsLoading } = useProjects();
   const isRTL = language === 'ar';
+
+  // Filter projects by developer
+  const projects = allProjects.filter((p) => p.developerId === developerId);
+
+  if (developerLoading || projectsLoading) {
+    return (
+      <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f0cb8e] mx-auto mb-4"></div>
+            <p className="text-[#6D6D6D]">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  const developer = developerData;
 
   if (!developer) {
     return (

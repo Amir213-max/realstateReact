@@ -7,6 +7,8 @@ import Footer from '@/components/Footer';
 import PropertyCard from '@/components/Cards/PropertyCard';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/Badge';
+import { useUnits } from '@/hooks/useGraphQL';
+import { formatPrice } from '@/lib/utils';
 
 export default function PropertiesPage() {
   const { language, t } = useLanguage();
@@ -14,12 +16,39 @@ export default function PropertiesPage() {
     type: '',
     priceRange: '',
     location: '',
+    isAvailable: true,
   });
-
+  const { units: allUnits, loading } = useUnits({ isAvailable: filters.isAvailable, type: filters.type || undefined });
   const isRTL = language === 'ar';
 
-  // Sample properties data - replace with actual data
-  const properties = [
+  // Transform units to properties format
+  const properties = allUnits.map(unit => ({
+    id: unit.id,
+    name: t({ ar: unit.name_ar, en: unit.name_en }),
+    description: t({ ar: unit.description_ar, en: unit.description_en }),
+    price: formatPrice(unit.price),
+    location: unit.project ? t({ ar: unit.project.address_ar, en: unit.project.address_en }) : '',
+    image: unit.images?.[0] || '',
+    featured: false,
+  }));
+
+  if (loading) {
+    return (
+      <div className={`min-h-screen bg-[#efefef] ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f0cb8e] mx-auto mb-4"></div>
+            <p className="text-[#6D6D6D]">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Sample properties data - replaced with GraphQL data above
+  const _sampleProperties = [
     {
       id: 1,
       name: language === 'ar' ? 'فيلا فاخرة في الرياض' : 'Luxury Villa in Riyadh',

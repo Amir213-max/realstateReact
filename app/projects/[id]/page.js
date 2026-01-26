@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { use } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
@@ -10,18 +9,34 @@ import Map from '@/components/Map';
 import UnitCard from '@/components/Cards/UnitCard';
 import WhatsAppConsultantModal from '@/components/Modals/WhatsAppConsultantModal';
 import { useModal } from '@/hooks/useModal';
-import projectsData from '@/data/projects.json';
-import unitsData from '@/data/units.json';
+import { useProject, useUnits } from '@/hooks/useGraphQL';
 import Link from 'next/link';
 
 export default function ProjectDetailPage({ params }) {
   const { language, t } = useLanguage();
   const resolvedParams = use(params);
   const projectId = parseInt(resolvedParams.id);
-  const project = projectsData.find((p) => p.id === projectId);
-  const units = unitsData.filter((u) => u.projectId === projectId);
+  const { project: projectData, loading: projectLoading } = useProject(projectId);
+  const { units: unitsData, loading: unitsLoading } = useUnits({ projectId });
   const whatsappModal = useModal();
   const isRTL = language === 'ar';
+
+  if (projectLoading) {
+    return (
+      <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f0cb8e] mx-auto mb-4"></div>
+            <p className="text-[#6D6D6D]">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  const project = projectData;
 
   if (!project) {
     return (
@@ -93,9 +108,9 @@ export default function ProjectDetailPage({ params }) {
           {/* Units */}
           <div className="bg-white rounded-lg shadow-md p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">{t(translations.availableUnits)}</h2>
-            {units.length > 0 ? (
+            {unitsData.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {units.map((unit) => (
+                {unitsData.map((unit) => (
                   <UnitCard key={unit.id} unit={unit} />
                 ))}
               </div>

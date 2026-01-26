@@ -1,0 +1,231 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"Indicates what fields are available at the top level of a query operation."
+type Query {
+    "Find a single country by ID."
+    country(id: ID! @eq): Country @find
+
+    "List multiple countries."
+    countries: [Country!]! @all
+
+    "Find a single region by ID."
+    region(id: ID! @eq): Region @find
+
+    "List multiple regions."
+    regions(
+        country_id: ID @eq
+    ): [Region!]! @all
+
+    "Find a single developer by ID."
+    developer(id: ID! @eq): Developer @find
+
+    "List multiple developers."
+    developers: [Developer!]! @all
+
+    "Find a single project by ID."
+    project(id: ID! @eq): Project @find
+
+    "List multiple projects."
+    projects(
+        region_id: ID @eq
+    ): [Project!]! @paginate(defaultCount: 10)
+
+    "Find a single unit by ID."
+    unit(id: ID! @eq): Unit @find
+
+    "List multiple units."
+    units(
+        type: String @eq
+        is_available: Boolean @eq
+        project_id: ID @eq
+        developer_id: ID @where(operator: "in", key: "developers.id")
+    ): [Unit!]! @paginate(defaultCount: 10)
+
+    "Find a single attribute by ID."
+    attribute(id: ID! @eq): Attribute @find
+
+    "List multiple attributes."
+    attributes: [Attribute!]! @all
+
+    "Find a single attribute value by ID."
+    attributeValue(id: ID! @eq): AttributeValue @find
+
+    "List multiple attribute values."
+    attributeValues(
+        attribute_id: ID @eq
+    ): [AttributeValue!]! @all
+
+    "Find a single setting by ID."
+    setting(id: ID! @eq): Setting @find
+
+    "List multiple settings."
+    settings(
+        group: String @eq
+        key: String @eq
+    ): [Setting!]! @all
+
+    "Get setting by group and key."
+    getSetting(
+        group: String! @eq
+        key: String! @eq
+    ): Setting @find
+
+    "Find a single unit inquiry by ID."
+    unitInquiry(id: ID! @eq): UnitInquiry @find
+
+    "List multiple unit inquiries."
+    unitInquiries(
+        unit_id: ID @eq
+        developer_id: ID @eq
+        status: String @eq
+    ): [UnitInquiry!]! @paginate(defaultCount: 10)
+}
+
+type Mutation {
+    "Submit a contact form for a unit."
+    submitUnitInquiry(
+        unit_id: ID! @rules(apply: ["required", "exists:units,id"])
+        developer_id: ID @rules(apply: ["exists:developers,id"])
+        name: String! @rules(apply: ["required", "max:255"])
+        email: String! @rules(apply: ["required", "email", "max:255"])
+        phone: String @rules(apply: ["max:255"])
+        message: String
+    ): UnitInquiry @create
+
+    "Create or update a setting."
+    upsertSetting(
+        group: String! @rules(apply: ["required", "max:255"])
+        key: String! @rules(apply: ["required", "max:255"])
+        value: String
+        image: String
+        link: String
+    ): Setting @upsert
+}
+
+type Country {
+    id: ID!
+    name: String!
+    code: String!
+    regions: [Region!]! @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Region {
+    id: ID!
+    name: String!
+    country: Country! @belongsTo
+    country_id: ID!
+    projects: [Project!]! @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Developer {
+    id: ID!
+    name: String!
+    description: String
+    logo: String
+    website: String
+    email: String
+    phone: String
+    projects: [Project!]! @belongsToMany
+    units: [Unit!]! @belongsToMany
+    inquiries: [UnitInquiry!]! @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Project {
+    id: ID!
+    name: String!
+    description: String
+    region: Region! @belongsTo
+    region_id: ID!
+    address: String
+    latitude: Float
+    longitude: Float
+    main_image: String
+    developers: [Developer!]! @belongsToMany
+    units: [Unit!]! @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Unit {
+    id: ID!
+    name: String!
+    description: String
+    type: String!
+    price: Float
+    area: Float
+    bedrooms: Int
+    bathrooms: Int
+    main_image: String
+    is_available: Boolean!
+    project: Project! @belongsTo
+    project_id: ID!
+    developers: [Developer!]! @belongsToMany
+    images: [UnitImage!]! @hasMany
+    attributeValues: [AttributeValue!]! @belongsToMany
+    inquiries: [UnitInquiry!]! @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Attribute {
+    id: ID!
+    name: String!
+    slug: String!
+    type: String!
+    values: [AttributeValue!]! @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type AttributeValue {
+    id: ID!
+    value: String!
+    attribute: Attribute! @belongsTo
+    attribute_id: ID!
+    units: [Unit!]! @belongsToMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type UnitImage {
+    id: ID!
+    unit: Unit! @belongsTo
+    unit_id: ID!
+    image_path: String!
+    order: Int!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type UnitInquiry {
+    id: ID!
+    unit: Unit! @belongsTo
+    unit_id: ID!
+    developer: Developer @belongsTo
+    developer_id: ID
+    name: String!
+    email: String!
+    phone: String
+    message: String
+    status: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Setting {
+    id: ID!
+    group: String!
+    key: String!
+    value: String
+    image: String
+    link: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}

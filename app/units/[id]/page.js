@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { use } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
@@ -11,18 +10,34 @@ import ContactUsModal from '@/components/Modals/ContactUsModal';
 import WhatsAppConsultantModal from '@/components/Modals/WhatsAppConsultantModal';
 import { useModal } from '@/hooks/useModal';
 import { formatPrice } from '@/lib/utils';
-import unitsData from '@/data/units.json';
-import projectsData from '@/data/projects.json';
+import { useUnit } from '@/hooks/useGraphQL';
 
 export default function UnitDetailPage({ params }) {
   const { language, t } = useLanguage();
   const resolvedParams = use(params);
   const unitId = parseInt(resolvedParams.id);
-  const unit = unitsData.find((u) => u.id === unitId);
-  const project = unit ? projectsData.find((p) => p.id === unit.projectId) : null;
+  const { unit: unitData, loading: unitLoading } = useUnit(unitId);
   const contactModal = useModal();
   const whatsappModal = useModal();
   const isRTL = language === 'ar';
+
+  if (unitLoading) {
+    return (
+      <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f0cb8e] mx-auto mb-4"></div>
+            <p className="text-[#6D6D6D]">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  const unit = unitData;
+  const project = unit?.project;
 
   if (!unit) {
     return (
@@ -98,7 +113,7 @@ export default function UnitDetailPage({ params }) {
               </div>
               <div className="bg-gray-50 rounded-lg p-4 text-center">
                 <div className="text-sm text-gray-600 mb-1">{t(translations.floor)}</div>
-                <div className="text-xl font-bold text-gray-900">{unit.floor}</div>
+                <div className="text-xl font-bold text-gray-900">-</div>
               </div>
               <div className="bg-gray-50 rounded-lg p-4 text-center">
                 <div className="text-sm text-gray-600 mb-1">{t(translations.bedrooms)}</div>

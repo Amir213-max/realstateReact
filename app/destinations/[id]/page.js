@@ -7,16 +7,36 @@ import Footer from '@/components/Footer';
 import SectionHeader from '@/components/SectionHeader';
 import DeveloperCard from '@/components/Cards/DeveloperCard';
 import Image from 'next/image';
-import destinationsData from '@/data/destinations.json';
-import developersData from '@/data/developers.json';
+import { useRegion, useProjects } from '@/hooks/useGraphQL';
+import { transformDeveloper } from '@/lib/dataTransform';
 
 export default function DestinationDetailPage({ params }) {
   const { language, t } = useLanguage();
   const resolvedParams = use(params);
   const destinationId = parseInt(resolvedParams.id);
-  const destination = destinationsData.find((d) => d.id === destinationId);
-  const developers = developersData.filter((d) => d.destinationId === destinationId);
+  const { region: destination, loading: regionLoading } = useRegion(destinationId);
+  const { projects: regionProjects, loading: projectsLoading } = useProjects(destinationId);
   const isRTL = language === 'ar';
+
+  // Get unique developers from projects
+  // Note: We need to fetch developers separately or get them from a different source
+  // For now, we'll use an empty array and let the user know we need to implement developer fetching
+  const developers = [];
+
+  if (regionLoading || projectsLoading) {
+    return (
+      <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f0cb8e] mx-auto mb-4"></div>
+            <p className="text-[#6D6D6D]">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!destination) {
     return (
@@ -82,11 +102,17 @@ export default function DestinationDetailPage({ params }) {
             title={language === 'ar' ? 'المطورون في هذه الوجهة' : 'Developers in this Destination'}
             subtitle={language === 'ar' ? 'اكتشف أفضل المطورين' : 'Discover the best developers'}
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {developers.map((developer) => (
-              <DeveloperCard key={developer.id} developer={developer} />
-            ))}
-          </div>
+          {developers.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {developers.map((developer) => (
+                <DeveloperCard key={developer.id} developer={developer} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-gray-600 py-8">
+              {language === 'ar' ? 'لا يوجد مطورون متاحون حالياً' : 'No developers available at the moment'}
+            </p>
+          )}
         </div>
       </section>
 

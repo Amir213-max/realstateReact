@@ -22,6 +22,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'mir-s3-cdn-cf.behance.net',
       },
+      {
+        protocol: 'https',
+        hostname: 'keeper.in-brackets.online',
+      },
     ],
   },
   webpack: (config, { isServer }) => {

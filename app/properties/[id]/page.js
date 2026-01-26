@@ -7,35 +7,60 @@ import Footer from '@/components/Footer';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/Badge';
 import PropertyImageGallery from '@/components/PropertyImageGallery';
+import { useUnit } from '@/hooks/useGraphQL';
+import { formatPrice } from '@/lib/utils';
 
 export default function PropertyDetailsPage() {
   const params = useParams();
   const { language, t } = useLanguage();
+  const { unit, loading } = useUnit(params.id);
   const isRTL = language === 'ar';
 
-  // Sample property data - replace with actual data fetching
+  if (loading) {
+    return (
+      <div className={`min-h-screen bg-[#efefef] ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f0cb8e] mx-auto mb-4"></div>
+            <p className="text-[#6D6D6D]">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!unit) {
+    return (
+      <div className={`min-h-screen bg-[#efefef] ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Navbar />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+          <h1 className="text-2xl font-bold text-gray-900">
+            {language === 'ar' ? 'العقار غير موجود' : 'Property not found'}
+          </h1>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Transform unit to property format
   const property = {
-    id: params.id,
-    name: language === 'ar' ? 'فيلا فاخرة في الرياض' : 'Luxury Villa in Riyadh',
-    description: language === 'ar'
-      ? 'فيلا حديثة بتصميم عصري وحدائق واسعة. تتكون من 4 غرف نوم، 3 حمامات، صالة واسعة، مطبخ مجهز بالكامل، وحديقة خاصة. الموقع ممتاز في حي راقي مع إطلالة جميلة.'
-      : 'Modern villa with contemporary design and spacious gardens. Features 4 bedrooms, 3 bathrooms, large living room, fully equipped kitchen, and private garden. Excellent location in an upscale neighborhood with beautiful views.',
-    price: 'SAR 2,500,000',
-    location: 'Riyadh, Al Olaya',
-    images: [
-      'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv',
-      'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2209394407_uuurxb',
-      '/assets/brand/images/shutterstock_2558087881.jpg',
-      'https://png.pngtree.com/thumb_back/fw800/background/20240601/pngtree-real-estate-luxury-building-sale-property-background-images-image_15851318.jpg',
-    ],
+    id: unit.id,
+    name: t({ ar: unit.name_ar, en: unit.name_en }),
+    description: t({ ar: unit.description_ar, en: unit.description_en }),
+    price: formatPrice(unit.price),
+    location: unit.project ? t({ ar: unit.project.address_ar, en: unit.project.address_en }) : '',
+    images: unit.images || [],
     features: [
-      { ar: '4 غرف نوم', en: '4 Bedrooms' },
-      { ar: '3 حمامات', en: '3 Bathrooms' },
+      unit.bedrooms ? { ar: `${unit.bedrooms} غرف نوم`, en: `${unit.bedrooms} Bedrooms` } : null,
+      unit.bathrooms ? { ar: `${unit.bathrooms} حمامات`, en: `${unit.bathrooms} Bathrooms` } : null,
+      unit.area ? { ar: `مساحة ${unit.area} م²`, en: `Area ${unit.area} m²` } : null,
       { ar: 'صالة واسعة', en: 'Large Living Room' },
       { ar: 'مطبخ مجهز', en: 'Fully Equipped Kitchen' },
-      { ar: 'حديقة خاصة', en: 'Private Garden' },
       { ar: 'موقف سيارات', en: 'Parking Space' },
-    ],
+    ].filter(Boolean),
   };
 
   const translations = {
