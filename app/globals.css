@@ -1,0 +1,362 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand Colors - Primary */
+  --color-dynamic-black: #1e1e1e;
+  --color-crystal-bell: #efefef;
+  
+  /* Brand Colors - Secondary */
+  --color-light-carbon: #cfcfcf;
+  --color-honeydew-sand: #f0cb8e;
+  
+  /* Black Shades */
+  --color-black-900: #1E1E1E;
+  --color-black-800: #353535;
+  --color-black-700: #494949;
+  --color-black-600: #6D6D6D;
+  --color-black-500: #A0A0A0;
+  --color-black-100: #EFEFEF;
+  
+  /* Sand Shades */
+  --color-sand-900: #967359;
+  --color-sand-800: #B28A67;
+  --color-sand-700: #C79E73;
+  --color-sand-600: #D8B280;
+  --color-sand-500: #F0CB8E;
+  --color-sand-100: #FAE69F;
+  
+  /* Gradients */
+  --gradient-dark: linear-gradient(135deg, #151515 0%, #484848 100%);
+  --gradient-sand: linear-gradient(135deg, #9a765b 0%, #f9e29d 100%);
+  
+  /* Spacing Scale */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(30, 30, 30, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(30, 30, 30, 0.1), 0 2px 4px -1px rgba(30, 30, 30, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(30, 30, 30, 0.1), 0 4px 6px -2px rgba(30, 30, 30, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(30, 30, 30, 0.1), 0 10px 10px -5px rgba(30, 30, 30, 0.04);
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  
+  /* Background & Foreground */
+  --background: #ffffff;
+  --foreground: #1e1e1e;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-hepta-slab), var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Modal Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+/* Hover Effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(30, 30, 30, 0.15);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(240, 203, 142, 0.4);
+}
+
+/* Scroll Animations */
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Property Image Gallery Swiper Styles */
+.property-main-swiper {
+  position: relative;
+}
+
+.property-main-swiper .swiper-button-next,
+.property-main-swiper .swiper-button-prev {
+  color: #efefef;
+  background: rgba(30, 30, 30, 0.7);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.property-main-swiper .swiper-button-next:hover,
+.property-main-swiper .swiper-button-prev:hover {
+  background: rgba(30, 30, 30, 0.9);
+  transform: scale(1.1);
+}
+
+.property-main-swiper .swiper-button-next::after,
+.property-main-swiper .swiper-button-prev::after {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.property-main-swiper .swiper-pagination-bullet {
+  background: #efefef;
+  opacity: 0.5;
+  width: 12px;
+  height: 12px;
+  transition: all 0.3s ease;
+}
+
+.property-main-swiper .swiper-pagination-bullet-active {
+  background: #f0cb8e;
+  opacity: 1;
+  width: 24px;
+  border-radius: 6px;
+}
+
+.property-thumbs-swiper {
+  padding: 8px 0;
+}
+
+.property-thumbs-swiper .swiper-slide {
+  transition: all 0.3s ease;
+}
+
+.property-thumbs-swiper .swiper-slide:hover {
+  transform: translateY(-4px);
+}
+
+/* Swiper Navigation Styles for Homepage */
+.new-projects-swiper .swiper-button-next,
+.new-projects-swiper .swiper-button-prev,
+.most-searched-swiper .swiper-button-next,
+.most-searched-swiper .swiper-button-prev {
+  color: #1e1e1e;
+  background: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.new-projects-swiper .swiper-button-next:hover,
+.new-projects-swiper .swiper-button-prev:hover,
+.most-searched-swiper .swiper-button-next:hover,
+.most-searched-swiper .swiper-button-prev:hover {
+  background: #f0cb8e;
+  transform: scale(1.1);
+}
+
+.new-projects-swiper .swiper-button-next::after,
+.new-projects-swiper .swiper-button-prev::after,
+.most-searched-swiper .swiper-button-next::after,
+.most-searched-swiper .swiper-button-prev::after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* RTL Support for Swiper */
+.rtl .new-projects-swiper .swiper-button-next,
+.rtl .most-searched-swiper .swiper-button-next {
+  left: 0;
+  right: auto;
+}
+
+.rtl .new-projects-swiper .swiper-button-prev,
+.rtl .most-searched-swiper .swiper-button-prev {
+  right: 0;
+  left: auto;
+}
+
+/* Blob Animation for Form Section */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}

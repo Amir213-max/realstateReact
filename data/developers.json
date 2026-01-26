@@ -1,0 +1,87 @@
+[
+  {
+    "id": 1,
+    "destinationId": 1,
+    "name_ar": "مطور الرياض الأول",
+    "name_en": "Riyadh Developer One",
+    "logo": "/logos/dev1.png",
+    "description_ar": "شركة رائدة في تطوير المشاريع العقارية في الرياض",
+    "description_en": "Leading company in real estate development in Riyadh",
+    "isPrimary": true,
+    "projectsCount": 5,
+    "unitsCount": 120
+  },
+  {
+    "id": 2,
+    "destinationId": 1,
+    "name_ar": "مطور الرياض الثاني",
+    "name_en": "Riyadh Developer Two",
+    "logo": "/logos/dev2.png",
+    "description_ar": "مطور متخصص في المشاريع السكنية الفاخرة",
+    "description_en": "Developer specialized in luxury residential projects",
+    "isPrimary": false,
+    "projectsCount": 3,
+    "unitsCount": 80
+  },
+  {
+    "id": 3,
+    "destinationId": 1,
+    "name_ar": "مطور الرياض الثالث",
+    "name_en": "Riyadh Developer Three",
+    "logo": "/logos/dev3.png",
+    "description_ar": "شركة تطوير عقاري حديثة بتقنيات متطورة",
+    "description_en": "Modern real estate development company with advanced technologies",
+    "isPrimary": false,
+    "projectsCount": 4,
+    "unitsCount": 95
+  },
+  {
+    "id": 4,
+    "destinationId": 2,
+    "name_ar": "مطور جدة الأول",
+    "name_en": "Jeddah Developer One",
+    "logo": "/logos/dev4.png",
+    "description_ar": "رائد في تطوير المشاريع الساحلية في جدة",
+    "description_en": "Pioneer in coastal project development in Jeddah",
+    "isPrimary": true,
+    "projectsCount": 4,
+    "unitsCount": 100
+  },
+  {
+    "id": 5,
+    "destinationId": 2,
+    "name_ar": "مطور جدة الثاني",
+    "name_en": "Jeddah Developer Two",
+    "logo": "/logos/dev5.png",
+    "description_ar": "مطور متخصص في المشاريع التجارية والسكنية",
+    "description_en": "Developer specialized in commercial and residential projects",
+    "isPrimary": false,
+    "projectsCount": 3,
+    "unitsCount": 70
+  },
+  {
+    "id": 6,
+    "destinationId": 3,
+    "name_ar": "مطور الدمام الأول",
+    "name_en": "Dammam Developer One",
+    "logo": "/logos/dev6.png",
+    "description_ar": "شركة تطوير عقاري رائدة في المنطقة الشرقية",
+    "description_en": "Leading real estate development company in the Eastern Province",
+    "isPrimary": true,
+    "projectsCount": 3,
+    "unitsCount": 75
+  },
+  {
+    "id": 7,
+    "destinationId": 4,
+    "name_ar": "مطور المدينة الأول",
+    "name_en": "Madinah Developer One",
+    "logo": "/logos/dev7.png",
+    "description_ar": "مطور متخصص في المشاريع القريبة من الحرم النبوي",
+    "description_en": "Developer specialized in projects near the Prophet's Mosque",
+    "isPrimary": true,
+    "projectsCount": 4,
+    "unitsCount": 90
+  }
+]
+

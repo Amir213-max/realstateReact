@@ -1,0 +1,43 @@
+[
+  {
+    "id": 1,
+    "name_ar": "الرياض",
+    "name_en": "Riyadh",
+    "image": "https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv",
+    "description_ar": "عاصمة المملكة العربية السعودية ومركزها التجاري والمالي",
+    "description_en": "The capital and commercial center of Saudi Arabia",
+    "developersCount": 5,
+    "projectsCount": 12
+  },
+  {
+    "id": 2,
+    "name_ar": "جدة",
+    "name_en": "Jeddah",
+    "image": "https://th.bing.com/th/id/OIP.Jy16vSGLOrlRWJ-2BrVMrgHaFj?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "description_ar": "عروس البحر الأحمر والبوابة الرئيسية للحجاج",
+    "description_en": "The bride of the Red Sea and the main gateway for pilgrims",
+    "developersCount": 4,
+    "projectsCount": 10
+  },
+  {
+    "id": 3,
+    "name_ar": "الدمام",
+    "name_en": "Dammam",
+    "image": "https://png.pngtree.com/thumb_back/fw800/background/20240601/pngtree-real-estate-luxury-building-sale-property-background-images-image_15851318.jpg",
+    "description_ar": "عاصمة المنطقة الشرقية ومركز النفط",
+    "description_en": "The capital of the Eastern Province and oil center",
+    "developersCount": 3,
+    "projectsCount": 8
+  },
+  {
+    "id": 4,
+    "name_ar": "المدينة المنورة",
+    "name_en": "Madinah",
+    "image": "https://png.pngtree.com/background/20220720/original/pngtree-high-definition-photography-material-of-building-development-picture-image_1683190.jpg",
+    "description_ar": "المدينة المباركة وثاني أقدس مكان في الإسلام",
+    "description_en": "The blessed city and second holiest place in Islam",
+    "developersCount": 2,
+    "projectsCount": 6
+  }
+]
+

@@ -1,0 +1,8 @@
+# Git LFS configuration removed
+# SVG and image files are small enough to be tracked normally
+# Uncomment below only if you need LFS for very large files (>100MB)
+
+# Large files (uncomment if needed):
+# *.zip filter=lfs diff=lfs merge=lfs -text
+# *.tar.gz filter=lfs diff=lfs merge=lfs -text
+# *.mp4 filter=lfs diff=lfs merge=lfs -text
