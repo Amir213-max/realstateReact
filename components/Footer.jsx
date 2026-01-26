@@ -133,19 +133,19 @@ export default function Footer() {
 
         <div className="mt-12 pt-8 border-t border-[#353535]">
           <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm">
-            <Link to="/" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
+            <Link href="/" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
               {t(translations.home)}
             </Link>
-            <Link to="/properties" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
+            <Link href="/properties" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
               {t(translations.search)}
             </Link>
-            <Link to="/blog" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
+            <Link href="/blog" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
               {t(translations.blog)}
             </Link>
-            <Link to="/about" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
+            <Link href="/about" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
               {t(translations.about)}
             </Link>
-            <Link to="/contact" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
+            <Link href="/contact" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
               {t(translations.contact)}
             </Link>
             <a href="#" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
@@ -154,13 +154,13 @@ export default function Footer() {
             <a href="#" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
               {t(translations.privacy)}
             </a>
-            <Link to="/how-it-works" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
+            <Link href="/how-it-works" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
               {t(translations.howItWorks)}
             </Link>
-            <Link to="/projects" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
+            <Link href="/projects" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
               {t(translations.newProjects)}
             </Link>
-            <Link to="/now" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
+            <Link href="/now" className="text-[#cfcfcf] hover:text-[#f0cb8e] transition-colors">
               {t(translations.yafelNow)}
             </Link>
           </div>
