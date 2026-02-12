@@ -3,10 +3,21 @@
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import Logo from './Logo';
+import { useRegions, useProjects, useDevelopers } from '@/hooks/useGraphQL';
 
 export default function Footer() {
   const { language, t } = useLanguage();
   const isRTL = language === 'ar';
+  
+  // Fetch data for footer sections
+  const { regions: regionsData = [] } = useRegions();
+  const { projects: projectsData = [] } = useProjects();
+  const { developers: developersData = [] } = useDevelopers();
+  
+  // Get most searched (top 10 projects by unitsCount)
+  const mostSearchedItems = (projectsData || [])
+    .sort((a, b) => (b.unitsCount || 0) - (a.unitsCount || 0))
+    .slice(0, 10);
 
   const translations = {
     about: { ar: 'من نحن', en: 'About Us' },
@@ -27,6 +38,10 @@ export default function Footer() {
     newProjects: { ar: 'المشروعات الجديدة', en: 'New Projects' },
     yafelNow: { ar: 'Yafel Now', en: 'Yafel Now' },
     realEstateCompany: { ar: 'شركة عقارات', en: 'Real Estate Company' },
+    regions: { ar: 'مناطق', en: 'Regions' },
+    compounds: { ar: 'كمبوندات', en: 'Compounds' },
+    developers: { ar: 'مطورين', en: 'Developers' },
+    mostSearched: { ar: 'الأكثر بحثا', en: 'Most Searched' },
   };
 
   return (
@@ -64,69 +79,81 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div className="md:col-span-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+          {/* Logo Section */}
+          <div className="lg:col-span-1">
             <Logo variant="horizontal" dark={true} className="mb-4" />
             <p className="text-[#cfcfcf] text-sm mt-4 leading-relaxed">
               {t(translations.tagline)}
             </p>
           </div>
           
+          {/* Regions Section */}
           <div>
-            <h4 className="font-semibold mb-6 text-[#f0cb8e]">{t(translations.about)}</h4>
+            <h4 className="font-semibold mb-6 text-[#f0cb8e] text-base">{t(translations.regions)}</h4>
             <ul className="space-y-3 text-sm text-[#cfcfcf]">
-              <li>
-                <Link href="/about" className="hover:text-[#f0cb8e] transition-colors">
-                  {language === 'ar' ? 'عن الشركة' : 'About Company'}
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-[#f0cb8e] transition-colors">
-                  {language === 'ar' ? 'رؤيتنا ورسالتنا' : 'Vision & Mission'}
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-[#f0cb8e] transition-colors">
-                  {language === 'ar' ? 'فريق العمل' : 'Our Team'}
-                </Link>
-              </li>
+              {(regionsData || []).slice(0, 10).map((region) => (
+                <li key={region.id}>
+                  <Link 
+                    href={`/destinations/${region.id}`} 
+                    className="hover:text-[#f0cb8e] transition-colors block"
+                  >
+                    {region ? t({ ar: region.name_ar || region.name, en: region.name_en || region.name }) : ''}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           
+          {/* Compounds Section */}
           <div>
-            <h4 className="font-semibold mb-6 text-[#f0cb8e]">{t(translations.properties)}</h4>
+            <h4 className="font-semibold mb-6 text-[#f0cb8e] text-base">{t(translations.compounds)}</h4>
             <ul className="space-y-3 text-sm text-[#cfcfcf]">
-              <li>
-                <Link href="/properties" className="hover:text-[#f0cb8e] transition-colors">
-                  {language === 'ar' ? 'جميع العقارات' : 'All Properties'}
-                </Link>
-              </li>
-              <li>
-                <Link href="/properties" className="hover:text-[#f0cb8e] transition-colors">
-                  {language === 'ar' ? 'عقارات مميزة' : 'Featured Properties'}
-                </Link>
-              </li>
+              {(projectsData || []).slice(0, 10).map((project) => (
+                <li key={project.id}>
+                  <Link 
+                    href={`/projects/${project.id}`} 
+                    className="hover:text-[#f0cb8e] transition-colors block"
+                  >
+                    {project ? t({ ar: project.name_ar || project.name, en: project.name_en || project.name }) : ''}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           
+          {/* Developers Section */}
           <div>
-            <h4 className="font-semibold mb-6 text-[#f0cb8e]">{t(translations.contact)}</h4>
+            <h4 className="font-semibold mb-6 text-[#f0cb8e] text-base">{t(translations.developers)}</h4>
             <ul className="space-y-3 text-sm text-[#cfcfcf]">
-              <li>
-                <Link href="/contact" className="hover:text-[#f0cb8e] transition-colors">
-                  {t(translations.contact)}
-                </Link>
-              </li>
-              <li>
-                <a href="#" className="hover:text-[#f0cb8e] transition-colors">
-                  {t(translations.privacy)}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-[#f0cb8e] transition-colors">
-                  {t(translations.terms)}
-                </a>
-              </li>
+              {(developersData || []).slice(0, 10).map((developer) => (
+                <li key={developer.id}>
+                  <Link 
+                    href={`/developers/${developer.id}`} 
+                    className="hover:text-[#f0cb8e] transition-colors block"
+                  >
+                    {developer ? t({ ar: developer.name_ar || developer.name, en: developer.name_en || developer.name }) : ''}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          {/* Most Searched Section */}
+          <div>
+            <h4 className="font-semibold mb-6 text-[#f0cb8e] text-base">{t(translations.mostSearched)}</h4>
+            <ul className="space-y-3 text-sm text-[#cfcfcf]">
+              {mostSearchedItems.map((project) => (
+                <li key={project.id}>
+                  <Link 
+                    href={`/projects/${project.id}`} 
+                    className="hover:text-[#f0cb8e] transition-colors block"
+                  >
+                    <span className="text-[#6D6D6D] text-xs mr-2">{project.unitsCount || 0}</span>
+                    {project ? t({ ar: project.name_ar || project.name, en: project.name_en || project.name }) : ''}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

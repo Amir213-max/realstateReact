@@ -171,15 +171,19 @@ export function useProject(id) {
       try {
         setLoading(true);
         setError(null);
+        console.log('🔍 Fetching project with ID:', id);
         const data = await graphqlRequest(queries.GET_PROJECT, { id: String(id) });
-        if (data) {
-          const transformed = transformProject(data?.project, 'ar');
+        console.log('📦 Raw project data:', data);
+        if (data && data.project) {
+          const transformed = transformProject(data.project, 'ar');
+          console.log('✨ Transformed project:', transformed);
           setProject(transformed);
         } else {
+          console.warn('⚠️ No project data returned for ID:', id);
           setProject(null);
         }
       } catch (err) {
-        console.error('Error fetching project:', err);
+        console.error('❌ Error fetching project:', err);
         setError(err.message);
         setProject(null);
       } finally {

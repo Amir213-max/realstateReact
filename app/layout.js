@@ -29,7 +29,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ar" dir="rtl" className={tajawal.className}>
-
       <body
         className={`${heptaSlab.variable}  ${geistMono.variable} antialiased`}
       >

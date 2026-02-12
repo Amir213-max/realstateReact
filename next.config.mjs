@@ -28,6 +28,10 @@ const nextConfig = {
       },
     ],
   },
+  // Performance optimizations
+  compress: true,
+  poweredByHeader: false,
+  // Simplified webpack config
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Prevent localStorage polyfills on server

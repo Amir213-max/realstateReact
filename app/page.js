@@ -12,9 +12,11 @@ import DestinationCard from '@/components/Cards/DestinationCard';
 import Button from '@/components/ui/Button';
 import { useProjects, useRegions, useProjectsSimple } from '@/hooks/useGraphQL';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay } from 'swiper/modules';
+import { Navigation, Autoplay, Pagination, EffectCoverflow } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-coverflow';
 
 export default function Home() {
   const { language, t } = useLanguage();
@@ -89,22 +91,10 @@ export default function Home() {
   // Search For Cards Data
   const searchForCards = [
     {
-      id: 1,
-      icon: '📊',
-      title: { ar: 'Yafel Shares', en: 'Yafel Shares' },
-      link: '/shares',
-    },
-    {
       id: 2,
       icon: '📍',
       title: { ar: 'بيع وحدتك', en: 'Sell Your Unit' },
       link: '/sell',
-    },
-    {
-      id: 3,
-      icon: '🏠',
-      title: { ar: 'Yafel Now', en: 'Yafel Now' },
-      link: '/now',
     },
     {
       id: 4,
@@ -130,18 +120,12 @@ export default function Home() {
       title: { ar: 'Yafel Unlocked', en: 'Yafel Unlocked' },
       link: '/unlocked',
     },
-    {
-      id: 8,
-      icon: '🔑',
-      title: { ar: 'Yafel Keys', en: 'Yafel Keys' },
-      link: '/keys',
-    },
   ];
 
   // Use simple projects query for homepage display
   const displayProjects = simpleProjects.length > 0 ? simpleProjects : allProjects;
   const featuredProjects = displayProjects.slice(0, 6);
-  const newProjects = displayProjects.slice(0, 3);
+  const newProjects = displayProjects.slice(0, 7);
   const mostSearchedProjects = displayProjects.slice(0, 6);
   
   // Log projects output to console
@@ -150,7 +134,7 @@ export default function Home() {
       console.group('🏠 HOME PAGE - Projects Display');
       console.log('Total Projects:', simpleProjects.length);
       console.log('Featured Projects (first 6):', featuredProjects);
-      console.log('New Projects (first 3):', newProjects);
+      console.log('New Projects (first 7):', newProjects);
       console.log('Most Searched Projects (first 6):', mostSearchedProjects);
       console.log('Full Projects Array:', simpleProjects);
       console.groupEnd();
@@ -421,16 +405,39 @@ export default function Home() {
             </Link>
           </div>
           <Swiper
-            modules={[Navigation, Autoplay]}
+            modules={[Navigation, Autoplay, Pagination]}
             spaceBetween={24}
             slidesPerView={1}
-            navigation
-            autoplay={{ delay: 3000, disableOnInteraction: false }}
+            navigation={{
+              nextEl: '.swiper-button-next-custom',
+              prevEl: '.swiper-button-prev-custom',
+            }}
+            pagination={{
+              clickable: true,
+              dynamicBullets: true,
+            }}
+            autoplay={{ 
+              delay: 4000, 
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+              reverseDirection: isRTL,
+            }}
+            loop={newProjects.length > 3}
+            loopAdditionalSlides={2}
+            watchSlidesProgress={true}
             breakpoints={{
-              640: { slidesPerView: 2 },
-              1024: { slidesPerView: 3 },
+              640: { 
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              1024: { 
+                slidesPerView: 3,
+                spaceBetween: 24,
+              },
             }}
             className="new-projects-swiper"
+            dir={isRTL ? 'rtl' : 'ltr'}
+            key={`swiper-${language}`}
           >
             {newProjects.map((project) => (
               <SwiperSlide key={project.id}>
@@ -438,6 +445,19 @@ export default function Home() {
               </SwiperSlide>
             ))}
           </Swiper>
+          {/* Custom Navigation Buttons */}
+          <div className={`flex items-center justify-center gap-4 mt-8 ${isRTL ? 'flex-row-reverse' : ''}`}>
+            <button className="swiper-button-prev-custom w-12 h-12 rounded-full bg-white shadow-lg hover:bg-[#f0cb8e] transition-all duration-300 flex items-center justify-center group">
+              <svg className="w-6 h-6 text-[#1e1e1e] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isRTL ? "M9 5l7 7-7 7" : "M15 19l-7-7 7-7"} />
+              </svg>
+            </button>
+            <button className="swiper-button-next-custom w-12 h-12 rounded-full bg-white shadow-lg hover:bg-[#f0cb8e] transition-all duration-300 flex items-center justify-center group">
+              <svg className="w-6 h-6 text-[#1e1e1e] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isRTL ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"} />
+              </svg>
+            </button>
+          </div>
         </div>
       </section>
 

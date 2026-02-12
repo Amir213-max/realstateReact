@@ -1,6 +1,6 @@
 'use client';
 
-import { use } from 'react';
+import { use, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -16,10 +16,19 @@ export default function ProjectDetailPage({ params }) {
   const { language, t } = useLanguage();
   const resolvedParams = use(params);
   const projectId = parseInt(resolvedParams.id);
-  const { project: projectData, loading: projectLoading } = useProject(projectId);
-  const { units: unitsData, loading: unitsLoading } = useUnits({ projectId });
+  const { project: projectData, loading: projectLoading, error: projectError } = useProject(projectId);
+  const { units: unitsData, loading: unitsLoading, error: unitsError } = useUnits({ projectId });
   const whatsappModal = useModal();
   const isRTL = language === 'ar';
+
+  // Debug logging
+  useEffect(() => {
+    console.log('🔍 Project Detail Page - Project ID:', projectId);
+    console.log('📦 Project Data:', projectData);
+    console.log('📦 Units Data:', unitsData);
+    console.log('❌ Project Error:', projectError);
+    console.log('❌ Units Error:', unitsError);
+  }, [projectId, projectData, unitsData, projectError, unitsError]);
 
   if (projectLoading) {
     return (

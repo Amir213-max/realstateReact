@@ -6,19 +6,27 @@ import { useLanguage } from '@/context/LanguageContext';
 import Card from '../ui/Card';
 import Badge from '../Badge';
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ project, priority = false }) {
   const { language, t } = useLanguage();
   const isRTL = language === 'ar';
 
   return (
     <Link href={`/projects/${project.id}`}>
       <Card hover className={`hover-lift ${isRTL ? 'rtl' : 'ltr'}`}>
-        <div className="relative h-56 w-full overflow-hidden">
+        <div className="relative h-56 w-full overflow-hidden bg-gray-200">
           <Image
-            src={project.images?.[0] || 'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv'}
+            src={project.images?.[0] || project.main_image || 'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv'}
             alt={t({ ar: project.name_ar, en: project.name_en })}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 hover:scale-105"
+            loading={priority ? "eager" : "lazy"}
+            priority={priority}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+            onError={(e) => {
+              e.target.src = 'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv';
+            }}
           />
           <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4">
             <Badge variant="secondary">

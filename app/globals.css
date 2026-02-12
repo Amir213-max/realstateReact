@@ -88,6 +88,27 @@ body {
   text-align: left;
 }
 
+/* Enhanced RTL Support */
+[dir="rtl"] * {
+  text-align: inherit;
+}
+
+/* RTL-aware spacing utilities */
+[dir="rtl"] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
 /* Line clamp utility */
 .line-clamp-2 {
   display: -webkit-box;
@@ -317,7 +338,56 @@ body {
 .most-searched-swiper .swiper-button-next::after,
 .most-searched-swiper .swiper-button-prev::after {
   font-size: 20px;
-  font-weight: bold;
+}
+
+/* Enhanced Swiper Pagination Styles */
+.new-projects-swiper .swiper-pagination {
+  position: relative;
+  margin-top: 2rem;
+}
+
+.new-projects-swiper .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: #d1d5db;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.new-projects-swiper .swiper-pagination-bullet-active {
+  background: #f0cb8e;
+  width: 32px;
+  border-radius: 6px;
+  transform: scale(1.2);
+}
+
+/* RTL Support for Swiper */
+[dir="rtl"] .new-projects-swiper {
+  direction: rtl;
+}
+
+[dir="rtl"] .new-projects-swiper .swiper-wrapper {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .new-projects-swiper .swiper-button-next {
+  left: 10px;
+  right: auto;
+  transform: rotate(180deg);
+}
+
+[dir="rtl"] .new-projects-swiper .swiper-button-prev {
+  right: 10px;
+  left: auto;
+  transform: rotate(180deg);
+}
+
+[dir="ltr"] .new-projects-swiper {
+  direction: ltr;
+}
+
+[dir="ltr"] .new-projects-swiper .swiper-wrapper {
+  flex-direction: row;
 }
 
 /* RTL Support for Swiper */
@@ -359,4 +429,31 @@ body {
 
 .animation-delay-4000 {
   animation-delay: 4s;
+}
+
+/* Mobile Menu Scrollbar Styling */
+.mobile-menu-container {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #f0cb8e #efefef;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+.mobile-menu-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mobile-menu-container::-webkit-scrollbar-track {
+  background: #efefef;
+  border-radius: 10px;
+}
+
+.mobile-menu-container::-webkit-scrollbar-thumb {
+  background: #f0cb8e;
+  border-radius: 10px;
+  border: 2px solid #efefef;
+}
+
+.mobile-menu-container::-webkit-scrollbar-thumb:hover {
+  background: #d8b280;
 }
