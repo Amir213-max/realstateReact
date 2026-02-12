@@ -1,24 +1,17 @@
 import { Geist_Mono } from "next/font/google";
-import { Hepta_Slab } from "next/font/google";
-import { Tajawal } from "next/font/google";
+import { Cairo } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
-
-const tajawal = Tajawal({
-  subsets: ["arabic"],
-  weight: ["400", "500", "700"],
-});
-
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
-const heptaSlab = Hepta_Slab({
-  variable: "--font-hepta-slab",
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+const cairo = Cairo({
+  variable: "--font-cairo",
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata = {
@@ -28,9 +21,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ar" dir="rtl" className={tajawal.className}>
+    <html lang="ar" dir="rtl" className={cairo.variable}>
       <body
-        className={`${heptaSlab.variable}  ${geistMono.variable} antialiased`}
+        className={`font-sans ${geistMono.variable} antialiased`}
       >
         <Providers>
           {children}

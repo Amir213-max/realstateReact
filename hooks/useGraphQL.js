@@ -276,16 +276,26 @@ export function useDevelopers() {
       try {
         setLoading(true);
         setError(null);
-        const data = await graphqlRequest(queries.GET_DEVELOPERS);
-        if (data) {
-          const transformed = transformDevelopers(data?.developers || [], 'ar');
+        const result = await graphqlRequest(queries.GET_DEVELOPERS);
+        
+        // Handle both data and errors
+        if (result && result.errors) {
+          console.warn('GraphQL returned errors:', result.errors);
+          setError(result.errors[0]?.message || 'Failed to fetch developers');
+          setDevelopers([]);
+        } else if (result && result.data) {
+          const transformed = transformDevelopers(result.data?.developers || [], 'ar');
+          setDevelopers(transformed);
+        } else if (result && result.developers) {
+          // Direct data structure
+          const transformed = transformDevelopers(result.developers || [], 'ar');
           setDevelopers(transformed);
         } else {
           setDevelopers([]);
         }
       } catch (err) {
         console.error('Error fetching developers:', err);
-        setError(err.message);
+        setError(err.message || 'Failed to fetch developers');
         setDevelopers([]);
       } finally {
         setLoading(false);

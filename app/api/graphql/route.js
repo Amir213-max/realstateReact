@@ -27,11 +27,39 @@ export async function POST(request) {
       }),
     });
 
+    // Check if response is ok
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('GraphQL API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText,
+      });
+      
+      return NextResponse.json(
+        { 
+          errors: [{
+            message: `GraphQL API returned ${response.status}: ${response.statusText}`,
+            extensions: { code: 'GRAPHQL_API_ERROR' }
+          }],
+          data: null
+        },
+        { 
+          status: response.status,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+          },
+        }
+      );
+    }
+
     const data = await response.json();
 
     // Return the response with proper CORS headers
     return NextResponse.json(data, {
-      status: response.status,
+      status: 200,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -42,10 +70,20 @@ export async function POST(request) {
     console.error('GraphQL Proxy Error:', error);
     return NextResponse.json(
       { 
-        error: 'Internal server error',
-        message: error.message 
+        errors: [{
+          message: error.message || 'Internal server error',
+          extensions: { code: 'INTERNAL_ERROR' }
+        }],
+        data: null
       },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      }
     );
   }
 }

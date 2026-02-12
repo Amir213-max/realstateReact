@@ -32,7 +32,7 @@ module.exports = {
         'sand-100': '#FAE69F',
       },
       fontFamily: {
-        sans: ['var(--font-hepta-slab)', 'var(--font-geist-sans)', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['var(--font-cairo)', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['var(--font-geist-mono)'],
       },
       spacing: {

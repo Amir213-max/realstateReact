@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
@@ -12,11 +12,10 @@ import Button from '@/components/ui/Button';
 import ImageWithLoader from '@/components/ui/ImageWithLoader';
 import { useProjects, useRegions, useProjectsSimple } from '@/hooks/useGraphQL';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay, Pagination, EffectCoverflow } from 'swiper/modules';
+import { Navigation, Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import 'swiper/css/effect-coverflow';
 
 export default function Home() {
   const { language, t } = useLanguage();
@@ -38,6 +37,8 @@ export default function Home() {
     message: '',
   });
   const isRTL = language === 'ar';
+  const swiperRef = useRef(null);
+  const mostSearchedSwiperRef = useRef(null);
 
   const translations = {
     heroTitle: {
@@ -140,6 +141,94 @@ export default function Home() {
       console.groupEnd();
     }
   }, [simpleProjects, featuredProjects, newProjects, mostSearchedProjects]);
+
+  // Update swiper when language changes
+  useEffect(() => {
+    if (swiperRef.current) {
+      const swiper = swiperRef.current;
+      const direction = isRTL ? 'rtl' : 'ltr';
+      
+      // Stop autoplay
+      if (swiper.autoplay && typeof swiper.autoplay.stop === 'function') {
+        try {
+          swiper.autoplay.stop();
+        } catch (error) {
+          console.warn('Error stopping autoplay:', error);
+        }
+      }
+      
+      // Change direction
+      if (swiper.changeDirection && typeof swiper.changeDirection === 'function') {
+        swiper.changeDirection(direction);
+      }
+      
+      // Update swiper
+      swiper.update();
+      if (swiper.updateSlides && typeof swiper.updateSlides === 'function') {
+        swiper.updateSlides();
+      }
+      if (swiper.updateSlidesClasses && typeof swiper.updateSlidesClasses === 'function') {
+        swiper.updateSlidesClasses();
+      }
+      
+      // Restart autoplay
+      if (swiper.autoplay && typeof swiper.autoplay.start === 'function') {
+        setTimeout(() => {
+          try {
+            if (swiper.autoplay && swiper.autoplay.start) {
+              swiper.autoplay.start();
+            }
+          } catch (error) {
+            console.warn('Error starting autoplay:', error);
+          }
+        }, 300);
+      }
+    }
+  }, [isRTL, language]);
+
+  // Update most searched swiper when language changes
+  useEffect(() => {
+    if (mostSearchedSwiperRef.current) {
+      const swiper = mostSearchedSwiperRef.current;
+      const direction = isRTL ? 'rtl' : 'ltr';
+      
+      // Stop autoplay
+      if (swiper.autoplay && typeof swiper.autoplay.stop === 'function') {
+        try {
+          swiper.autoplay.stop();
+        } catch (error) {
+          console.warn('Error stopping autoplay:', error);
+        }
+      }
+      
+      // Change direction
+      if (swiper.changeDirection && typeof swiper.changeDirection === 'function') {
+        swiper.changeDirection(direction);
+      }
+      
+      // Update swiper
+      swiper.update();
+      if (swiper.updateSlides && typeof swiper.updateSlides === 'function') {
+        swiper.updateSlides();
+      }
+      if (swiper.updateSlidesClasses && typeof swiper.updateSlidesClasses === 'function') {
+        swiper.updateSlidesClasses();
+      }
+      
+      // Restart autoplay
+      if (swiper.autoplay && typeof swiper.autoplay.start === 'function') {
+        setTimeout(() => {
+          try {
+            if (swiper.autoplay && swiper.autoplay.start) {
+              swiper.autoplay.start();
+            }
+          } catch (error) {
+            console.warn('Error starting autoplay:', error);
+          }
+        }, 300);
+      }
+    }
+  }, [isRTL, language]);
   
   const heroImages = [
     'https://png.pngtree.com/thumb_back/fw800/background/20240601/pngtree-real-estate-luxury-building-sale-property-background-images-image_15851318.jpg',
@@ -392,7 +481,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* New Projects Section with Carousel */}
+      {/* New Projects Section with Slider */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`flex items-center justify-between mb-12 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -404,112 +493,196 @@ export default function Home() {
               <span>{isRTL ? '←' : '→'}</span>
             </Link>
           </div>
-          <Swiper
-            modules={[Navigation, Autoplay, Pagination]}
-            spaceBetween={24}
-            slidesPerView={1}
-            navigation={{
-              nextEl: '.swiper-button-next-custom',
-              prevEl: '.swiper-button-prev-custom',
-            }}
-            pagination={{
-              clickable: true,
-              dynamicBullets: true,
-            }}
-            autoplay={{ 
-              delay: 4000, 
-              disableOnInteraction: false,
-              pauseOnMouseEnter: true,
-              reverseDirection: isRTL,
-            }}
-            loop={newProjects.length > 3}
-            loopAdditionalSlides={2}
-            watchSlidesProgress={true}
-            breakpoints={{
-              640: { 
-                slidesPerView: 2,
-                spaceBetween: 20,
-              },
-              1024: { 
-                slidesPerView: 3,
-                spaceBetween: 24,
-              },
-            }}
-            className="new-projects-swiper"
-            dir={isRTL ? 'rtl' : 'ltr'}
-            key={`swiper-${language}`}
-          >
-            {newProjects.map((project) => (
-              <SwiperSlide key={project.id}>
-                <ProjectCard project={project} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          {/* Custom Navigation Buttons */}
-          <div className={`flex items-center justify-center gap-4 mt-8 ${isRTL ? 'flex-row-reverse' : ''}`}>
-            <button className="swiper-button-prev-custom w-12 h-12 rounded-full bg-white shadow-lg hover:bg-[#f0cb8e] transition-all duration-300 flex items-center justify-center group">
-              <svg className="w-6 h-6 text-[#1e1e1e] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isRTL ? "M9 5l7 7-7 7" : "M15 19l-7-7 7-7"} />
-              </svg>
-            </button>
-            <button className="swiper-button-next-custom w-12 h-12 rounded-full bg-white shadow-lg hover:bg-[#f0cb8e] transition-all duration-300 flex items-center justify-center group">
-              <svg className="w-6 h-6 text-[#1e1e1e] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isRTL ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"} />
-              </svg>
-            </button>
-          </div>
+          
+          {newProjects.length > 0 && (
+            <div className="relative">
+              <Swiper
+                ref={swiperRef}
+                modules={[Navigation, Autoplay, Pagination]}
+                spaceBetween={24}
+                slidesPerView={1}
+                navigation={{
+                  nextEl: '.swiper-button-next-new-projects',
+                  prevEl: '.swiper-button-prev-new-projects',
+                }}
+                pagination={{
+                  clickable: true,
+                  el: '.swiper-pagination-new-projects',
+                }}
+                autoplay={{
+                  delay: 3500,
+                  disableOnInteraction: false,
+                }}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 1.5,
+                    spaceBetween: 24,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                    spaceBetween: 24,
+                  },
+                  1024: {
+                    slidesPerView: 2.5,
+                    spaceBetween: 28,
+                  },
+                  1280: {
+                    slidesPerView: 3,
+                    spaceBetween: 32,
+                  },
+                  1440: {
+                    slidesPerView: 3.5,
+                    spaceBetween: 36,
+                  },
+                }}
+                className="new-projects-swiper"
+                dir={isRTL ? 'rtl' : 'ltr'}
+                key={`swiper-${language}`}
+                onSwiper={(swiper) => {
+                  swiperRef.current = swiper;
+                  const direction = isRTL ? 'rtl' : 'ltr';
+                  if (swiper.changeDirection) {
+                    swiper.changeDirection(direction);
+                  }
+                  swiper.update();
+                }}
+              >
+                {newProjects.map((project) => (
+                  <SwiperSlide key={project.id}>
+                    <div className="h-full">
+                      <ProjectCard project={project} />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              
+              {/* Custom Navigation Buttons */}
+              <button 
+                type="button"
+                className="swiper-button-prev-new-projects"
+                aria-label={isRTL ? 'التالي' : 'Previous'}
+              >
+                <svg className={`w-6 h-6 text-[#1e1e1e] ${isRTL ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button 
+                type="button"
+                className="swiper-button-next-new-projects"
+                aria-label={isRTL ? 'السابق' : 'Next'}
+              >
+                <svg className={`w-6 h-6 text-[#1e1e1e] ${isRTL ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+              
+              {/* Custom Pagination */}
+              <div className="swiper-pagination-new-projects"></div>
+            </div>
+          )}
         </div>
       </section>
 
       {/* Most Searched Compounds Section */}
       <section className="py-24 bg-[#efefef]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1e1e1e] mb-2">
-              {t(translations.mostSearched)}
-            </h2>
-            <p className="text-lg text-gray-600">
-              {mostSearchedProjects.length} {t(translations.results)}
-            </p>
+          <div className={`flex items-center justify-between mb-12 ${isRTL ? 'flex-row-reverse' : ''}`}>
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1e1e1e] mb-2">
+                {t(translations.mostSearched)}
+              </h2>
+              <p className="text-lg text-gray-600">
+                {mostSearchedProjects.length} {t(translations.results)}
+              </p>
+            </div>
           </div>
-          <Swiper
-            modules={[Navigation, Autoplay]}
-            spaceBetween={20}
-            slidesPerView={1}
-            navigation
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
-            breakpoints={{
-              640: { slidesPerView: 2 },
-              768: { slidesPerView: 3 },
-              1024: { slidesPerView: 4 },
-            }}
-            className="most-searched-swiper"
-          >
-            {mostSearchedProjects.map((project) => (
-              <SwiperSlide key={project.id}>
-                <Link href={`/projects/${project.id}`}>
-                  <div className="relative h-64 rounded-xl overflow-hidden group cursor-pointer">
-                    <ImageWithLoader
-                      src={project.images?.[0] || 'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv'}
-                      alt={t({ ar: project.name_ar, en: project.name_en })}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      unoptimized
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                      <h3 className="text-xl font-bold mb-1">
-                        {t({ ar: project.name_ar, en: project.name_en })}
-                      </h3>
-                      <p className="text-sm opacity-90">
-                        {project.unitsCount || 0} {language === 'ar' ? 'وحدات' : 'units'}
-                      </p>
+          
+          {mostSearchedProjects.length > 0 && (
+            <div className="relative">
+              <Swiper
+                ref={mostSearchedSwiperRef}
+                modules={[Navigation, Autoplay, Pagination]}
+                spaceBetween={24}
+                slidesPerView={1}
+                navigation={{
+                  nextEl: '.swiper-button-next-most-searched',
+                  prevEl: '.swiper-button-prev-most-searched',
+                }}
+                pagination={{
+                  clickable: true,
+                  el: '.swiper-pagination-most-searched',
+                }}
+                autoplay={{
+                  delay: 3500,
+                  disableOnInteraction: false,
+                }}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 1.5,
+                    spaceBetween: 24,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                    spaceBetween: 24,
+                  },
+                  1024: {
+                    slidesPerView: 2.5,
+                    spaceBetween: 28,
+                  },
+                  1280: {
+                    slidesPerView: 3,
+                    spaceBetween: 32,
+                  },
+                  1440: {
+                    slidesPerView: 3.5,
+                    spaceBetween: 36,
+                  },
+                }}
+                className="new-projects-swiper"
+                dir={isRTL ? 'rtl' : 'ltr'}
+                key={`most-searched-swiper-${language}`}
+                onSwiper={(swiper) => {
+                  mostSearchedSwiperRef.current = swiper;
+                  const direction = isRTL ? 'rtl' : 'ltr';
+                  if (swiper.changeDirection) {
+                    swiper.changeDirection(direction);
+                  }
+                  swiper.update();
+                }}
+              >
+                {mostSearchedProjects.map((project) => (
+                  <SwiperSlide key={project.id}>
+                    <div className="h-full">
+                      <ProjectCard project={project} />
                     </div>
-                  </div>
-                </Link>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              
+              {/* Custom Navigation Buttons */}
+              <button 
+                type="button"
+                className="swiper-button-prev-most-searched"
+                aria-label={isRTL ? 'التالي' : 'Previous'}
+              >
+                <svg className={`w-6 h-6 text-[#1e1e1e] ${isRTL ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button 
+                type="button"
+                className="swiper-button-next-most-searched"
+                aria-label={isRTL ? 'السابق' : 'Next'}
+              >
+                <svg className={`w-6 h-6 text-[#1e1e1e] ${isRTL ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+              
+              {/* Custom Pagination */}
+              <div className="swiper-pagination-most-searched"></div>
+            </div>
+          )}
         </div>
       </section>
 

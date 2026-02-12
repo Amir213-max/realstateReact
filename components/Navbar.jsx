@@ -79,7 +79,7 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center gap-1 rtl:gap-reverse">
+          <div className="hidden lg:flex items-center gap-1 rtl:gap-reverse">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -244,7 +244,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-[#1e1e1e] hover:bg-[#efefef] rounded-lg transition-colors mobile-menu-container"
+              className="lg:hidden p-2 text-[#1e1e1e] hover:bg-[#efefef] rounded-lg transition-colors mobile-menu-container"
               aria-label="Toggle menu"
             >
               <svg
@@ -274,7 +274,7 @@ export default function Navbar() {
         </div>
 
         <div
-          className={`md:hidden mobile-menu-container transition-all duration-300 ease-in-out ${
+          className={`lg:hidden mobile-menu-container transition-all duration-300 ease-in-out ${
             isMenuOpen ? 'max-h-[85vh] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'
           }`}
           style={{
