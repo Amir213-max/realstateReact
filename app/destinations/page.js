@@ -33,18 +33,37 @@ export default function DestinationsPage() {
   }
 
   return (
-    <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div className={`min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 ${isRTL ? 'rtl' : 'ltr'}`}>
       <Navbar />
 
-      <section className="py-16">
+      {/* Hero Section */}
+      <section className="relative py-20 bg-gradient-to-br from-[#1e1e1e] via-[#2d2d2d] to-[#1e1e1e] overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-[#f0cb8e] rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-600 rounded-full blur-3xl"></div>
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+            {t(translations.title)}
+          </h1>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            {t(translations.subtitle)}
+          </p>
+        </div>
+      </section>
+
+      {/* Destinations Grid */}
+      <section className="py-16 -mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            title={t(translations.title)}
-            subtitle={t(translations.subtitle)}
-          />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {destinationsData.map((destination) => (
-              <DestinationCard key={destination.id} destination={destination} />
+            {destinationsData.map((destination, index) => (
+              <div
+                key={destination.id}
+                className="animate-fadeInUp"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <DestinationCard destination={destination} />
+              </div>
             ))}
           </div>
         </div>

@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SectionHeader from '@/components/SectionHeader';
 import DeveloperCard from '@/components/Cards/DeveloperCard';
+import ProjectCard from '@/components/Cards/ProjectCard';
 import ImageWithLoader from '@/components/ui/ImageWithLoader';
 import { useRegion, useProjects } from '@/hooks/useGraphQL';
 import { transformDeveloper } from '@/lib/dataTransform';
@@ -53,14 +54,20 @@ export default function DestinationDetailPage({ params }) {
   }
 
   return (
-    <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div className={`min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 ${isRTL ? 'rtl' : 'ltr'}`}>
       <Navbar />
 
       {/* Destination Header */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-gradient-to-br from-[#1e1e1e] via-[#2d2d2d] to-[#1e1e1e] py-20 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-[#f0cb8e] rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-600 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="relative w-full md:w-96 h-64 rounded-lg overflow-hidden">
+            <div className="relative w-full md:w-96 h-80 rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
               <ImageWithLoader
                 src={destination.image || '/destinations/default.jpg'}
                 alt={t({ ar: destination.name_ar, en: destination.name_en })}
@@ -68,24 +75,29 @@ export default function DestinationDetailPage({ params }) {
                 className="object-cover"
                 unoptimized
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
             </div>
-            <div className="flex-1 text-center md:text-right rtl:md:text-left">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <div className="flex-1 text-center md:text-left rtl:md:text-right">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
                 {t({ ar: destination.name_ar, en: destination.name_en })}
               </h1>
-              <p className="text-xl text-blue-100 mb-6">
+              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
                 {t({ ar: destination.description_ar, en: destination.description_en })}
               </p>
-              <div className="flex items-center justify-center md:justify-end rtl:md:justify-start gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold">{destination.developersCount || 0}</div>
-                  <div className="text-blue-100">
+              <div className="flex items-center justify-center md:justify-start rtl:md:justify-end gap-8">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/20">
+                  <div className="text-3xl md:text-4xl font-bold text-[#f0cb8e] mb-1">
+                    {destination.developersCount || 0}
+                  </div>
+                  <div className="text-gray-300 text-sm font-medium">
                     {language === 'ar' ? 'مطور' : 'Developers'}
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold">{destination.projectsCount || 0}</div>
-                  <div className="text-blue-100">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/20">
+                  <div className="text-3xl md:text-4xl font-bold text-[#f0cb8e] mb-1">
+                    {destination.projectsCount || regionProjects.length || 0}
+                  </div>
+                  <div className="text-gray-300 text-sm font-medium">
                     {language === 'ar' ? 'مشروع' : 'Projects'}
                   </div>
                 </div>
@@ -95,6 +107,29 @@ export default function DestinationDetailPage({ params }) {
         </div>
       </section>
 
+      {/* Projects Section */}
+      {regionProjects && regionProjects.length > 0 && (
+        <section className="py-16 -mt-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectionHeader
+              title={language === 'ar' ? 'المشاريع في هذه الوجهة' : 'Projects in this Destination'}
+              subtitle={language === 'ar' ? 'اكتشف جميع المشاريع المتاحة' : 'Discover all available projects'}
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+              {regionProjects.map((project, index) => (
+                <div
+                  key={project.id}
+                  className="animate-fadeInUp"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <ProjectCard project={project} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Developers Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,15 +138,26 @@ export default function DestinationDetailPage({ params }) {
             subtitle={language === 'ar' ? 'اكتشف أفضل المطورين' : 'Discover the best developers'}
           />
           {developers.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {developers.map((developer) => (
-                <DeveloperCard key={developer.id} developer={developer} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+              {developers.map((developer, index) => (
+                <div
+                  key={developer.id}
+                  className="animate-fadeInUp"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <DeveloperCard developer={developer} />
+                </div>
               ))}
             </div>
           ) : (
-            <p className="text-center text-gray-600 py-8">
-              {language === 'ar' ? 'لا يوجد مطورون متاحون حالياً' : 'No developers available at the moment'}
-            </p>
+            <div className="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-200">
+              <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              <p className="text-gray-600 text-lg">
+                {language === 'ar' ? 'لا يوجد مطورون متاحون حالياً' : 'No developers available at the moment'}
+              </p>
+            </div>
           )}
         </div>
       </section>

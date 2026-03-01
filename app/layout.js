@@ -21,7 +21,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ar" dir="rtl" className={cairo.variable}>
+    <html suppressHydrationWarning className={cairo.variable}>
       <body
         className={`font-sans ${geistMono.variable} antialiased`}
       >

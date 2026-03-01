@@ -285,9 +285,9 @@ export default function Home() {
         </div>
 
         {/* Enhanced Search Bar with Tabs - Half on background, half below */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 translate-y-1/2 z-10 w-full max-w-7xl px-4 sm:px-6 lg:px-8 mb-12 animate-fadeInUp" style={{ animationDelay: '0.4s', bottom: '0vh' }}>
+        <div className="absolute left-1/2 transform -translate-x-1/2 translate-y-1/2 z-10 w-full max-w-7xl px-4 sm:px-6 lg:px-8 mb-12" style={{ bottom: '0vh' }}>
           {/* Text Content - Above form, on the right */}
-          <div className={`mb-6 ${isRTL ? 'text-right' : 'text-left'} animate-fadeInUp`}>
+          <div className={`mb-6 ${isRTL ? 'text-right' : 'text-left'}`}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 leading-tight">
               {t(translations.heroTitle)}
             </h1>
@@ -675,13 +675,13 @@ export default function Home() {
       {/* New Projects Section with Slider */}
       <section className="py-9 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`flex items-center justify-between mb-12 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1e1e1e]">
+          <div className="flex items-center justify-between mb-12">
+            <h2 className={`text-3xl md:text-4xl font-bold text-[#1e1e1e] ${isRTL ? 'text-right' : 'text-left'}`}>
               {t(translations.newProjects)}
             </h2>
-            <Link href="/projects" className="text-[#f0cb8e] font-semibold hover:text-[#d8b280] transition-colors flex items-center gap-2">
+            <Link href="/projects" className={`text-[#f0cb8e] font-semibold hover:text-[#d8b280] transition-colors flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
               {t(translations.viewAll)}
-              <span>{isRTL ? '→' : '←'}</span>
+              <span>{isRTL ? '←' : '→'}</span>
             </Link>
           </div>
           
@@ -792,10 +792,10 @@ export default function Home() {
       </section>
 
       {/* Most Searched Compounds Section */}
-      <section className="py-9 bg-white">
+      <section className={`py-9 bg-white ${isRTL ? 'rtl' : 'ltr'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`flex items-center justify-between mb-12 ${isRTL ? 'flex-row-reverse' : ''}`}>
-            <div>
+          <div className="flex items-center justify-between mb-12">
+            <div className={`${isRTL ? 'text-right' : 'text-left'}`}>
               <h2 className="text-3xl md:text-4xl font-bold text-[#1e1e1e] mb-2">
                 {t(translations.mostSearched)}
               </h2>

@@ -10,12 +10,19 @@ export default function DirectionSetter() {
   useEffect(() => {
     if (typeof document !== 'undefined') {
       const html = document.documentElement;
-      html.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+      const body = document.body;
+      
+      // Set direction and language attributes immediately
+      const direction = isRTL ? 'rtl' : 'ltr';
+      html.setAttribute('dir', direction);
       html.setAttribute('lang', language);
       
       // Update body class for RTL support
-      document.body.classList.remove('rtl', 'ltr');
-      document.body.classList.add(isRTL ? 'rtl' : 'ltr');
+      body.classList.remove('rtl', 'ltr');
+      body.classList.add(direction);
+      
+      // Force reflow to ensure changes take effect immediately
+      void html.offsetHeight;
     }
   }, [language, isRTL]);
 
