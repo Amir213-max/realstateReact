@@ -15,6 +15,7 @@ type Query {
     "List multiple regions."
     regions(
         country_id: ID @eq
+        is_featured: Boolean @eq
     ): [Region!]! @all
 
     "Find a single developer by ID."
@@ -23,21 +24,35 @@ type Query {
     "List multiple developers."
     developers: [Developer!]! @all
 
-    "Find a single project by ID."
-    project(id: ID! @eq): Project @find
+    "Find a single project by ID (increments browse/view counter)."
+    project(id: ID!): Project @field(resolver: "App\\GraphQL\\Queries\\BrowseProject@find")
+
+    "Most browsed projects by views_count (from project(id) lookups)."
+    mostBrowsedProjects(
+        first: Int = 10
+        region_id: ID
+    ): [Project!]! @field(resolver: "App\\GraphQL\\Queries\\BrowseProject@mostBrowsed")
 
     "List multiple projects."
     projects(
         region_id: ID @eq
     ): [Project!]! @paginate(defaultCount: 10)
 
-    "Find a single unit by ID."
-    unit(id: ID! @eq): Unit @find
+    "Find a single unit by ID (increments browse/view counter)."
+    unit(id: ID!): Unit @field(resolver: "App\\GraphQL\\Queries\\BrowseUnit@find")
+
+    "Most browsed units by views_count (from unit(id) lookups)."
+    mostBrowsedUnits(
+        first: Int = 10
+        project_id: ID
+    ): [Unit!]! @field(resolver: "App\\GraphQL\\Queries\\BrowseUnit@mostBrowsed")
 
     "List multiple units."
     units(
         type: String @eq
         is_available: Boolean @eq
+        is_featured: Boolean @eq
+        is_rentable: Boolean @eq
         project_id: ID @eq
         developer_id: ID @where(operator: "in", key: "developers.id")
     ): [Unit!]! @paginate(defaultCount: 10)
@@ -115,6 +130,7 @@ type Country {
 type Region {
     id: ID!
     name: String!
+    is_featured: Boolean!
     country: Country! @belongsTo
     country_id: ID!
     projects: [Project!]! @hasMany
@@ -147,6 +163,7 @@ type Project {
     latitude: Float
     longitude: Float
     main_image: String
+    views_count: Int!
     developers: [Developer!]! @belongsToMany
     units: [Unit!]! @hasMany
     created_at: DateTime!
@@ -164,6 +181,9 @@ type Unit {
     bathrooms: Int
     main_image: String
     is_available: Boolean!
+    is_featured: Boolean!
+    is_rentable: Boolean!
+    views_count: Int!
     project: Project! @belongsTo
     project_id: ID!
     developers: [Developer!]! @belongsToMany
