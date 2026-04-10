@@ -58,14 +58,174 @@ const SOCIAL_PLATFORMS = {
   },
   facebook: {
     label: 'Facebook',
-    aliases: ['facebook', 'fb'],
+    aliases: ['facebook', 'fb', 'فيسبوك'],
     path: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z',
     fallback: 'https://facebook.com',
+  },
+  tiktok: {
+    label: 'TikTok',
+    aliases: ['tiktok', 'tik_tok'],
+    path: 'M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 1 1-2.88-2.89c.16 0 .32.02.47.05V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 5 15.66a6.34 6.34 0 0 0 10.27 4.95v-7a8.16 8.16 0 0 0 4.32 1.24V9.9a4.85 4.85 0 0 1-2-.21z',
+    fallback: 'https://tiktok.com',
+  },
+  snapchat: {
+    label: 'Snapchat',
+    aliases: ['snapchat', 'snap'],
+    path: 'M12.206.793c.99 0 4.347.276 5.524 3.204.829 2.1.352 5.569-1.097 6.795 2.597.87 4.16 3.183.247 6.605-.995.904-2.425 1.315-4.293 1.315-2.25-.02-3.65-.598-4.888-1.503-1.433.905-3.347 1.503-5.597 1.503-1.868 0-3.298-.411-4.293-1.315-3.914-3.422-2.35-5.735.247-6.605-1.45-1.226-1.926-4.695-1.097-6.795C7.86 1.07 11.217.793 12.206.793z',
+    fallback: 'https://snapchat.com',
+  },
+  whatsapp: {
+    label: 'WhatsApp',
+    aliases: ['whatsapp', 'wa', 'واتساب', 'واتس'],
+    path: 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z',
+    fallback: 'https://whatsapp.com',
+  },
+  telegram: {
+    label: 'Telegram',
+    aliases: ['telegram', 'tg'],
+    path: 'M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z',
+    fallback: 'https://telegram.org',
+  },
+  pinterest: {
+    label: 'Pinterest',
+    aliases: ['pinterest', 'pin'],
+    path: 'M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.378l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z',
+    fallback: 'https://pinterest.com',
+  },
+  generic: {
+    label: 'Link',
+    aliases: [],
+    path: 'M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4.9v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1s1.39-3.1 3.1-3.1h8.2V12H3.9zm16.1 0c0 1.71-1.39 3.1-3.1 3.1H13v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5H13v2h4c1.71 0 3.1 1.39 3.1 3.1z',
+    fallback: '',
   },
 };
 
 function normalizeSocialName(value) {
   return String(value || '').toLowerCase().replace(/\s+/g, '_').trim();
+}
+
+function looksLikeHttpUrl(str) {
+  return /^https?:\/\//i.test(String(str || '').trim());
+}
+
+function resolveSocialHref(s) {
+  const link = String(s?.link || '').trim();
+  const val = String(s?.value || '').trim();
+  if (looksLikeHttpUrl(link)) return link;
+  if (looksLikeHttpUrl(val)) return val;
+  return '';
+}
+
+/** اسم المنصة للمطابقة: لو value رابط نستخدم key، وإلا value ثم key */
+function resolvePlatformToken(s) {
+  const val = String(s?.value || '').trim();
+  const key = String(s?.key || '').trim();
+  if (looksLikeHttpUrl(val)) return normalizeSocialName(key);
+  return normalizeSocialName(val || key);
+}
+
+function mergeSocialSettingRows(primary, fallback) {
+  const merged = [];
+  const seenId = new Set();
+  const seenContent = new Set();
+
+  for (const s of [...(Array.isArray(primary) ? primary : []), ...(Array.isArray(fallback) ? fallback : [])]) {
+    if (!s) continue;
+
+    if (s.id != null) {
+      const k = `id:${s.id}`;
+      if (seenId.has(k)) continue;
+      seenId.add(k);
+      merged.push(s);
+      continue;
+    }
+
+    const key = String(s.key ?? '').trim();
+    const value = String(s.value ?? '').trim();
+    const link = String(s.link ?? '').trim();
+    const contentKey = `${key}|${value}|${link}`;
+
+    // صفوف من الـ API فيها group فقط (باقي الحقول فاضية) — ما ندمجهاش في صف واحد
+    if (contentKey === '||') {
+      merged.push(s);
+      continue;
+    }
+
+    if (seenContent.has(contentKey)) continue;
+    seenContent.add(contentKey);
+    merged.push(s);
+  }
+
+  return merged;
+}
+
+/** لو key/value مش متطابقين مع aliases، نخمّن المنصة من الرابط */
+const HREF_PLATFORM_HINTS = [
+  ['wa.me', 'whatsapp'],
+  ['api.whatsapp', 'whatsapp'],
+  ['whatsapp.com', 'whatsapp'],
+  ['tiktok.com', 'tiktok'],
+  ['snapchat.com', 'snapchat'],
+  ['t.me', 'telegram'],
+  ['telegram.me', 'telegram'],
+  ['telegram.org', 'telegram'],
+  ['pinterest.', 'pinterest'],
+  ['linkedin.com', 'linkedin'],
+  ['youtube.com', 'youtube'],
+  ['youtu.be', 'youtube'],
+  ['instagram.com', 'instagram'],
+  ['facebook.com', 'facebook'],
+  ['fb.com', 'facebook'],
+  ['twitter.com', 'twitter'],
+  ['x.com', 'twitter'],
+];
+
+function platformFromHref(href) {
+  const u = String(href).toLowerCase();
+  for (const [sub, key] of HREF_PLATFORM_HINTS) {
+    if (u.includes(sub)) return SOCIAL_PLATFORMS[key];
+  }
+  return null;
+}
+
+function platformMatchesToken(platform, token) {
+  if (!token) return false;
+  if (platform.aliases.includes(token)) return true;
+  return token.split('_').some((part) => platform.aliases.includes(part));
+}
+
+function resolvePlatformForRow(s, href) {
+  const token = resolvePlatformToken(s);
+  const named = Object.entries(SOCIAL_PLATFORMS)
+    .filter(([k]) => k !== 'generic')
+    .map(([, p]) => p)
+    .find((p) => platformMatchesToken(p, token));
+  if (named) return named;
+  const fromHref = platformFromHref(href);
+  if (fromHref) return fromHref;
+  return SOCIAL_PLATFORMS.generic;
+}
+
+/** لو link فاضي لكن value = اسم منصة معروفة، نستخدم رابط المنصة الافتراضي (صفحة رئيسية) */
+function resolveHrefWithPlatformFallback(s) {
+  let href = resolveSocialHref(s);
+  const platform = resolvePlatformForRow(s, href || '');
+  if (!href && platform && platform !== SOCIAL_PLATFORMS.generic) {
+    const fb = String(platform.fallback || '').trim();
+    if (looksLikeHttpUrl(fb)) href = fb;
+  }
+  return { href, platform };
+}
+
+function socialRowLabel(s, platform) {
+  if (platform !== SOCIAL_PLATFORMS.generic) return platform.label;
+  const fromKey = String(s.key || '')
+    .replace(/_/g, ' ')
+    .trim();
+  if (fromKey) return fromKey;
+  const tok = resolvePlatformToken(s);
+  if (tok) return tok.replace(/_/g, ' ');
+  return platform.label;
 }
 
 function ColumnLinks({ title, loading, children }) {
@@ -104,28 +264,21 @@ export default function Footer() {
   const playStoreHref = urlFromSettings(footerSettings, ['play_store', 'google_play', 'android'], 'https://play.google.com/store');
   const appStoreHref = urlFromSettings(footerSettings, ['app_store', 'ios', 'apple'], 'https://apps.apple.com');
   const socialLinks = useMemo(() => {
-    const sourceSettings =
-      Array.isArray(socialSettingsPrimary) && socialSettingsPrimary.length
-        ? socialSettingsPrimary
-        : socialSettingsFallback;
-    const normalized = Array.isArray(sourceSettings) ? sourceSettings : [];
-    const items = normalized
-      .map((s) => {
-        const name = normalizeSocialName(s.value || s.key);
-        const platform = Object.values(SOCIAL_PLATFORMS).find((p) => p.aliases.includes(name));
-        if (!platform) return null;
-        const href = String(s.link || '').trim();
-        if (!/^https?:\/\//i.test(href)) return null;
+    const normalized = mergeSocialSettingRows(socialSettingsPrimary, socialSettingsFallback);
+    return normalized
+      .map((s, index) => {
+        const { href, platform } = resolveHrefWithPlatformFallback(s);
+        if (!href) return null;
+        // فهرس + id + href: يمنع تكرار مفتاح React لو الـ API رجّع نفس id لأكتر من رابط
+        const id = `social-${index}-${s.id ?? 'noid'}-${href}`;
         return {
-          id: `${name}-${s.id || href}`,
-          label: platform.label,
+          id,
+          label: socialRowLabel(s, platform),
           path: platform.path,
           href,
         };
       })
       .filter(Boolean);
-
-    return items;
   }, [socialSettingsPrimary, socialSettingsFallback]);
 
   const regionSlice = regions.slice(0, COLUMN_LIMIT);
@@ -224,21 +377,25 @@ export default function Footer() {
 
                   {socialLinks.length > 0 && (
                     <div
-                      className={`flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2 ${
-                        isRTL ? 'sm:justify-end' : 'sm:justify-start'
+                      role="region"
+                      aria-label={t(translations.followUs)}
+                      className={`mt-1 w-full min-w-0 rounded-xl border border-borderColor bg-white/90 p-4 shadow-sm ring-1 ring-black/5 sm:p-5 ${
+                        isRTL ? 'text-center sm:text-end' : 'text-center sm:text-start'
                       }`}
-                      aria-label="Social"
                     >
-                      <p className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-textSecondary">
-                        {t(translations.followUs)}
-                      </p>
-                      <div
-                        className={`flex flex-wrap items-center justify-center gap-2.5 ${isRTL ? 'sm:justify-end' : 'sm:justify-start'}`}
-                      >
-                        {socialLinks.map((item) => (
-                          <SocialIcon key={item.id} href={item.href} label={item.label} path={item.path} />
-                        ))}
+                      <div className="mb-3 flex flex-col items-center gap-1 sm:mb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-3">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-textSecondary">
+                          {t(translations.followUs)}
+                        </p>
+                        <span className="hidden h-px flex-1 bg-borderColor sm:block" aria-hidden />
                       </div>
+                      <ul className="m-0 flex w-full list-none flex-wrap items-center justify-center gap-3 p-0 sm:justify-start sm:gap-x-4 sm:gap-y-3 md:gap-x-5">
+                        {socialLinks.map((item) => (
+                          <li key={item.id} className="shrink-0">
+                            <SocialIcon href={item.href} label={item.label} path={item.path} />
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
                 </div>
@@ -305,9 +462,9 @@ function SocialIcon({ href, label, path }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-borderColor bg-white text-primary transition-colors hover:border-gold hover:bg-bgSection hover:text-gold-deep"
+      className="flex h-11 min-h-[44px] w-11 min-w-[44px] items-center justify-center rounded-full border border-borderColor bg-bgSection text-primary shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/80 hover:bg-white hover:text-gold-deep hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-white active:translate-y-0 active:shadow-sm"
     >
-      <svg className="h-[18px] w-[18px]" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+      <svg className="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
         <path d={path} />
       </svg>
     </a>
