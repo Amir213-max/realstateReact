@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Button from '@/components/ui/Button';
+import Seo from '@/components/Seo';
+import { BrandAtmosphere, BrandGlassPanel } from '@/components/ui/BrandAtmosphere';
 import ImageWithLoader from '@/components/ui/ImageWithLoader';
 import { useSiteSetting } from '@/hooks/useGraphQL';
 import { fixImageUrl } from '@/lib/dataTransform';
@@ -89,8 +91,10 @@ export default function AboutPage() {
 
   return (
     <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+      <Seo title={t(translations.title)} description={t(translations.subtitle)} />
       <Navbar />
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       {/* Header */}
       <section className="bg-gradient-to-br from-primary to-primary-soft text-white/95 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -177,25 +181,31 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-primary to-primary-soft text-white/95">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            {language === 'ar'
-              ? 'جاهزون لبدء رحلتك العقارية؟'
-              : 'Ready to Start Your Real Estate Journey?'}
-          </h2>
-          <p className="text-xl text-white/70 mb-8">
-            {language === 'ar'
-              ? 'تواصل معنا اليوم واكتشف كيف يمكننا مساعدتك'
-              : 'Contact us today and discover how we can help you'}
-          </p>
-          <Button variant="secondary" size="lg">
-            {t(translations.contactUs)}
-          </Button>
+      {/* CTA Section — same brand atmosphere + glass as Home / Contact */}
+      <BrandAtmosphere className="py-16">
+        <div className="relative z-10 mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+          <BrandGlassPanel className="px-6 py-10 sm:px-10 sm:py-12">
+            <h2 className="mb-4 text-3xl font-bold text-textPrimary md:text-4xl">
+              {language === 'ar'
+                ? 'جاهزون لبدء رحلتك العقارية؟'
+                : 'Ready to Start Your Real Estate Journey?'}
+            </h2>
+            <p className="mb-8 text-lg text-textSecondary sm:text-xl">
+              {language === 'ar'
+                ? 'تواصل معنا اليوم واكتشف كيف يمكننا مساعدتك'
+                : 'Contact us today and discover how we can help you'}
+            </p>
+            <Link
+              to="/contact"
+              className="inline-flex items-center justify-center rounded-lg bg-gold px-8 py-4 text-lg font-semibold text-gold-foreground transition-all duration-300 hover:bg-primary hover:text-white"
+            >
+              {t(translations.contactUs)}
+            </Link>
+          </BrandGlassPanel>
         </div>
-      </section>
+      </BrandAtmosphere>
 
+      </main>
       <Footer />
     </div>
   );

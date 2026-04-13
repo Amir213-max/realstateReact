@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Seo from '@/components/Seo';
 import ImageGallery from '@/components/ImageGallery';
 import Map from '@/components/Map';
 import Button from '@/components/ui/Button';
@@ -27,16 +28,22 @@ export default function UnitDetailPage() {
   const [inquiry, setInquiry] = useState({ name: '', email: '', phone: '', message: '' });
   const [inquirySubmitting, setInquirySubmitting] = useState(false);
 
+  const loadingTitle = language === 'ar' ? 'تفاصيل الوحدة' : 'Unit details';
+  const loadingDesc = language === 'ar' ? 'يافيل — عقارات فاخرة.' : 'Yafel — premium real estate.';
+
   if (unitLoading) {
     return (
       <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Seo title={loadingTitle} description={loadingDesc} />
         <Navbar />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4"></div>
-            <p className="text-textSecondary">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+        <main id="main-content" tabIndex={-1} className="outline-none">
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4"></div>
+              <p className="text-textSecondary">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+            </div>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
@@ -48,12 +55,18 @@ export default function UnitDetailPage() {
   if (!unit) {
     return (
       <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Seo
+          title={language === 'ar' ? 'الوحدة غير موجودة' : 'Unit not found'}
+          description={loadingDesc}
+        />
         <Navbar />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <h1 className="text-2xl font-bold text-textPrimary">
-            {language === 'ar' ? 'الوحدة غير موجودة' : 'Unit not found'}
-          </h1>
-        </div>
+        <main id="main-content" tabIndex={-1} className="outline-none">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+            <h1 className="text-2xl font-bold text-textPrimary">
+              {language === 'ar' ? 'الوحدة غير موجودة' : 'Unit not found'}
+            </h1>
+          </div>
+        </main>
         <Footer />
       </div>
     );
@@ -100,10 +113,18 @@ export default function UnitDetailPage() {
     }
   }
 
+  const unitTitle = t({ ar: unit.name_ar, en: unit.name_en });
+  const unitDesc = t({ ar: unit.description_ar || '', en: unit.description_en || '' })
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 160);
+
   return (
     <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+      <Seo title={unitTitle} description={unitDesc || loadingDesc} />
       <Navbar />
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-md p-8 mb-8">
@@ -245,6 +266,7 @@ export default function UnitDetailPage() {
         </div>
       </section>
 
+      </main>
       <ContactUsModal isOpen={contactModal.isOpen} onClose={contactModal.close} />
 
       {project && (

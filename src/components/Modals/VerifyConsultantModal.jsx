@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useId } from 'react';
 import toast from 'react-hot-toast';
 import { useLanguage } from '@/context/LanguageContext';
 import { buildWhatsAppChatUrl, toWhatsAppDigits } from '@/lib/utils';
@@ -9,6 +9,19 @@ export default function VerifyConsultantModal({ isOpen, onClose }) {
   const { language, t } = useLanguage();
   const [phone, setPhone] = useState('');
   const isRTL = language === 'ar';
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setPhone('');
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
 
   const translations = {
     title: { ar: 'تحقق من مستشارك العقاري', en: 'Verify Your Real Estate Consultant' },
@@ -60,8 +73,12 @@ export default function VerifyConsultantModal({ isOpen, onClose }) {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn"
       onClick={handleClose}
+      role="presentation"
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         className={`bg-white rounded-2xl shadow-2xl w-full max-w-md mx-auto animate-slideUp ${isRTL ? 'rtl' : 'ltr'}`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -74,7 +91,9 @@ export default function VerifyConsultantModal({ isOpen, onClose }) {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-textPrimary mb-3 text-center">{t(translations.title)}</h2>
+          <h2 id={titleId} className="text-2xl font-bold text-textPrimary mb-3 text-center">
+            {t(translations.title)}
+          </h2>
 
           <p className="text-textSecondary mb-6 text-center text-sm leading-relaxed">{t(translations.description)}</p>
 

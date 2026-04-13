@@ -1,11 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PropertyCard from '@/components/Cards/PropertyCard';
 import Button from '@/components/ui/Button';
+import Seo from '@/components/Seo';
+import EmptyState from '@/components/EmptyState';
+import { BrandPageClosing } from '@/components/ui/BrandAtmosphere';
 import { useUnits } from '@/hooks/useGraphQL';
 import { formatPrice } from '@/lib/utils';
 
@@ -67,18 +71,33 @@ export default function PropertiesPage() {
     results: { ar: 'نتائج البحث', en: 'Search Results' },
     loadMore: { ar: 'تحميل المزيد', en: 'Load more' },
     loadingMore: { ar: 'جاري التحميل...', en: 'Loading...' },
+    emptyTitle: { ar: 'لا توجد عقارات', en: 'No properties yet' },
+    emptyDesc: {
+      ar: 'جرّب تغيير الفلاتر أو العودة لاحقاً.',
+      en: 'Try adjusting your filters or check back later.',
+    },
+    emptyCta: { ar: 'الرئيسية', en: 'Home' },
+    closingTitle: { ar: 'لم تجد العقار المناسب؟', en: "Can't find the right property?" },
+    closingDesc: {
+      ar: 'أخبرنا بما تبحث عنه وسنساعدك في أقرب وقت.',
+      en: 'Tell us what you need and we will help you shortly.',
+    },
+    closingCta: { ar: 'تواصل معنا', en: 'Contact us' },
   };
 
   if (loading && page === 1) {
     return (
       <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Seo title={t(translations.title)} description={t(translations.subtitle)} />
         <Navbar />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4" />
-            <p className="text-textSecondary">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+        <main id="main-content" tabIndex={-1} className="outline-none">
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4" />
+              <p className="text-textSecondary">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+            </div>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
@@ -86,7 +105,9 @@ export default function PropertiesPage() {
 
   return (
     <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+      <Seo title={t(translations.title)} description={t(translations.subtitle)} />
       <Navbar />
+      <main id="main-content" tabIndex={-1} className="outline-none">
       <section className="bg-gradient-to-br from-primary to-primary-soft text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">{t(translations.title)}</h1>
@@ -153,12 +174,21 @@ export default function PropertiesPage() {
                   {t(translations.results)} ({paginatorInfo?.total ?? properties.length})
                 </h2>
               </div>
+              {!error && properties.length === 0 ? (
+                <EmptyState
+                  title={t(translations.emptyTitle)}
+                  description={t(translations.emptyDesc)}
+                  actionLabel={t(translations.emptyCta)}
+                  actionTo="/"
+                />
+              ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {properties.map((property) => (
                   <PropertyCard key={property.id} property={property} />
                 ))}
               </div>
-              {canLoadMore && (
+              )}
+              {canLoadMore && properties.length > 0 && (
                 <div className="mt-10 flex justify-center">
                   <Button
                     variant="outline"
@@ -174,6 +204,18 @@ export default function PropertiesPage() {
           </div>
         </div>
       </section>
+
+      <BrandPageClosing>
+        <h2 className="text-xl font-bold text-textPrimary sm:text-2xl">{t(translations.closingTitle)}</h2>
+        <p className="mx-auto mt-3 max-w-md text-sm text-textSecondary sm:text-base">{t(translations.closingDesc)}</p>
+        <Link
+          to="/contact"
+          className="mt-8 inline-flex items-center justify-center rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-white transition-all duration-300 hover:bg-gold hover:text-primary"
+        >
+          {t(translations.closingCta)}
+        </Link>
+      </BrandPageClosing>
+      </main>
       <Footer />
     </div>
   );

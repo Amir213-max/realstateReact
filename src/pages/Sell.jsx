@@ -3,6 +3,8 @@ import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Button from '@/components/ui/Button';
+import Seo from '@/components/Seo';
+import { BrandAtmosphere, BrandGlassPanel } from '@/components/ui/BrandAtmosphere';
 import { useRegions } from '@/hooks/useGraphQL';
 
 export default function SellPage() {
@@ -41,6 +43,10 @@ export default function SellPage() {
     description: { ar: 'الوصف', en: 'Description' },
     submit: { ar: 'إرسال', en: 'Submit' },
     required: { ar: 'مطلوب', en: 'Required' },
+    seoDesc: {
+      ar: 'أدرج وحدةك للبيع مع يافيل.',
+      en: 'List your unit for sale with Yafel.',
+    },
   };
 
   const unitTypes = [
@@ -220,8 +226,10 @@ export default function SellPage() {
 
   return (
     <div className={`min-h-screen bg-gradient-to-b from-white to-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+      <Seo title={t(translations.title)} description={t(translations.seoDesc)} />
       <Navbar />
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       {/* Header Section */}
       <section className="bg-gradient-to-br from-primary via-primary-soft to-primary-muted text-white py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -236,8 +244,8 @@ export default function SellPage() {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <BrandAtmosphere className="py-12 sm:py-16">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Three Steps */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {/* Step 1 */}
@@ -296,7 +304,7 @@ export default function SellPage() {
           </div>
 
           {/* Form Section */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 md:p-10 border border-borderColor">
+          <BrandGlassPanel className="p-6 md:p-10">
             <div className="mb-8">
               <h2 className="text-3xl md:text-4xl font-bold text-textPrimary mb-4">
                 {t(translations.fillForm)}
@@ -452,10 +460,11 @@ export default function SellPage() {
                 </Button>
               </div>
             </form>
-          </div>
+          </BrandGlassPanel>
         </div>
-      </section>
+      </BrandAtmosphere>
 
+      </main>
       <Footer />
     </div>
   );

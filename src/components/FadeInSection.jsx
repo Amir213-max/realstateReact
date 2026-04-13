@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-export default function FadeInSection({ children, className = '', as: Tag = 'section', style }) {
+export default function FadeInSection({ children, className = '', as, style }) {
+  const Tag = as === 'div' ? 'div' : 'section';
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 

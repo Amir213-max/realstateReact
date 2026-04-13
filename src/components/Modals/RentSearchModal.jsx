@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useId } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { useLanguage } from '@/context/LanguageContext';
@@ -35,6 +35,7 @@ export function getRentBandRange(bandId) {
 export default function RentSearchModal({ isOpen, onClose, onApply, carouselImages = [] }) {
   const { language, t } = useLanguage();
   const isRTL = language === 'ar';
+  const titleId = useId();
   const { regions, loading: regionsLoading } = useRegions();
   const [regionId, setRegionId] = useState('');
   const { projects, loading: projectsLoading } = useProjects(regionId || null, { first: 60, page: 1 });
@@ -110,7 +111,7 @@ export default function RentSearchModal({ isOpen, onClose, onApply, carouselImag
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="rent-search-title"
+        aria-labelledby={titleId}
       >
         <div className="relative w-full aspect-[16/10] bg-primary-muted rounded-t-2xl overflow-hidden">
           {slides.length > 0 ? (
@@ -136,7 +137,7 @@ export default function RentSearchModal({ isOpen, onClose, onApply, carouselImag
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
-          <h2 id="rent-search-title" className="text-xl font-bold text-center text-textPrimary">
+          <h2 id={titleId} className="text-xl font-bold text-center text-textPrimary">
             {t(translations.title)}
           </h2>
 
@@ -209,6 +210,7 @@ export default function RentSearchModal({ isOpen, onClose, onApply, carouselImag
               type="button"
               onClick={onClose}
               className="flex-1 py-3 rounded-xl border border-borderColor-strong font-semibold text-textPrimary hover:bg-bgSection"
+              aria-label={t(translations.close)}
             >
               {t(translations.close)}
             </button>

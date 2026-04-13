@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Seo from '@/components/Seo';
+import EmptyState from '@/components/EmptyState';
 import SectionHeader from '@/components/SectionHeader';
 import DeveloperCard from '@/components/Cards/DeveloperCard';
 import ProjectCard from '@/components/Cards/ProjectCard';
@@ -20,16 +22,22 @@ export default function DestinationDetailPage() {
 
   const developers = [];
 
+  const loadingTitle = language === 'ar' ? 'الوجهة' : 'Destination';
+  const loadingDesc = language === 'ar' ? 'يافيل — عقارات فاخرة.' : 'Yafel — premium real estate.';
+
   if (regionLoading || projectsLoading) {
     return (
       <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Seo title={loadingTitle} description={loadingDesc} />
         <Navbar />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4"></div>
-            <p className="text-textSecondary">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+        <main id="main-content" tabIndex={-1} className="outline-none">
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4"></div>
+              <p className="text-textSecondary">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+            </div>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
@@ -38,25 +46,39 @@ export default function DestinationDetailPage() {
   if (!destination) {
     return (
       <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Seo
+          title={language === 'ar' ? 'الوجهة غير موجودة' : 'Destination not found'}
+          description={loadingDesc}
+        />
         <Navbar />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <h1 className="text-2xl font-bold text-textPrimary">
-            {language === 'ar' ? 'الوجهة غير موجودة' : 'Destination not found'}
-          </h1>
-        </div>
+        <main id="main-content" tabIndex={-1} className="outline-none">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+            <h1 className="text-2xl font-bold text-textPrimary">
+              {language === 'ar' ? 'الوجهة غير موجودة' : 'Destination not found'}
+            </h1>
+          </div>
+        </main>
         <Footer />
       </div>
     );
   }
 
+  const destTitle = t({ ar: destination.name_ar, en: destination.name_en });
+  const destDesc = t({ ar: destination.description_ar || '', en: destination.description_en || '' })
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 160);
+
   return (
     <div className={`min-h-screen bg-gradient-to-br from-bgSection via-white to-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+      <Seo title={destTitle} description={destDesc || loadingDesc} />
       <Navbar />
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       <section className="relative bg-gradient-to-br from-primary via-primary-soft to-primary-muted py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-96 h-96 bg-gold rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-600 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-primary/25 blur-3xl" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -101,13 +123,13 @@ export default function DestinationDetailPage() {
         </div>
       </section>
 
-      {regionProjects && regionProjects.length > 0 && (
-        <section className="py-16 -mt-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeader
-              title={language === 'ar' ? 'المشاريع في هذه الوجهة' : 'Projects in this Destination'}
-              subtitle={language === 'ar' ? 'اكتشف جميع المشاريع المتاحة' : 'Discover all available projects'}
-            />
+      <section className="py-16 -mt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            title={language === 'ar' ? 'المشاريع في هذه الوجهة' : 'Projects in this Destination'}
+            subtitle={language === 'ar' ? 'اكتشف جميع المشاريع المتاحة' : 'Discover all available projects'}
+          />
+          {regionProjects?.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
               {regionProjects.map((project, index) => (
                 <div
@@ -119,9 +141,22 @@ export default function DestinationDetailPage() {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-      )}
+          ) : (
+            <div className="mt-12">
+              <EmptyState
+                title={language === 'ar' ? 'لا توجد مشاريع' : 'No projects in this destination'}
+                description={
+                  language === 'ar'
+                    ? 'لا توجد مشاريع مدرجة لهذه الوجهة حالياً.'
+                    : 'There are no projects listed for this destination yet.'
+                }
+                actionLabel={language === 'ar' ? 'تصفح المشاريع' : 'Browse projects'}
+                actionTo="/projects"
+              />
+            </div>
+          )}
+        </div>
+      </section>
 
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -142,18 +177,23 @@ export default function DestinationDetailPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-white rounded-2xl shadow-lg border border-borderColor">
-              <svg className="w-16 h-16 text-textSecondary mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-              <p className="text-textSecondary text-lg">
-                {language === 'ar' ? 'لا يوجد مطورون متاحون حالياً' : 'No developers available at the moment'}
-              </p>
+            <div className="mt-12">
+              <EmptyState
+                title={language === 'ar' ? 'لا يوجد مطورون' : 'No developers yet'}
+                description={
+                  language === 'ar'
+                    ? 'لا يوجد مطورون مدرجون لهذه الوجهة حالياً.'
+                    : 'There are no developers listed for this destination yet.'
+                }
+                actionLabel={language === 'ar' ? 'الرئيسية' : 'Home'}
+                actionTo="/"
+              />
             </div>
           )}
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

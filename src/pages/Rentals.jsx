@@ -1,17 +1,20 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Button from '@/components/ui/Button';
+import Seo from '@/components/Seo';
+import EmptyState from '@/components/EmptyState';
 import RentalUnitCard from '@/components/Cards/RentalUnitCard';
 import RentSearchModal, { getRentBandRange } from '@/components/Modals/RentSearchModal';
 import { useUnits, useRegions, useProjects } from '@/hooks/useGraphQL';
 import ImageWithLoader from '@/components/ui/ImageWithLoader';
+import { BrandPageClosing } from '@/components/ui/BrandAtmosphere';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -149,18 +152,33 @@ export default function RentalsPage() {
     loadingMore: { ar: 'جاري التحميل...', en: 'Loading...' },
     fab: { ar: 'ملء النموذج', en: 'Fill the form' },
     results: { ar: 'نتيجة', en: 'results' },
+    emptyTitle: { ar: 'لا توجد وحدات مطابقة', en: 'No matching units' },
+    emptyDesc: {
+      ar: 'جرّب تغيير الفلاتر أو البحث من جديد.',
+      en: 'Try changing filters or search again.',
+    },
+    homeCta: { ar: 'الرئيسية', en: 'Home' },
+    closingTitle: { ar: 'تحتاج مساعدة في اختيار إيجارك؟', en: 'Need help choosing a rental?' },
+    closingDesc: {
+      ar: 'تواصل معنا لترشيح وحدات تناسب ميزانيتك وجدولك.',
+      en: 'We can shortlist units that fit your budget and timeline.',
+    },
+    closingCta: { ar: 'تواصل معنا', en: 'Contact us' },
   };
 
   if (loading && page === 1 && accumulated.length === 0) {
     return (
       <div className={`min-h-screen bg-white ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Seo title={t(translations.pageTitle)} description={t(translations.subtitle)} />
         <Navbar />
-        <div className="flex items-center justify-center min-h-[50vh]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-500 mx-auto mb-4" />
-            <p className="text-textSecondary">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+        <main id="main-content" tabIndex={-1} className="outline-none">
+          <div className="flex items-center justify-center min-h-[50vh]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-500 mx-auto mb-4" />
+              <p className="text-textSecondary">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+            </div>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
@@ -168,8 +186,10 @@ export default function RentalsPage() {
 
   return (
     <div className={`min-h-screen bg-white ${isRTL ? 'rtl' : 'ltr'}`}>
+      <Seo title={t(translations.pageTitle)} description={t(translations.subtitle)} />
       <Navbar />
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       <section className="pt-8 pb-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <p className="text-center text-sky-500 font-semibold tracking-wide text-sm mb-2">
           {t(translations.brandLine)}
@@ -302,19 +322,22 @@ export default function RentalsPage() {
           {filteredUnits.length} {t(translations.results)}
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredUnits.map((unit) => (
-            <RentalUnitCard key={unit.id} unit={unit} />
-          ))}
-        </div>
-
-        {filteredUnits.length === 0 && !loading && (
-          <p className="text-center text-textSecondary py-16">
-            {language === 'ar' ? 'لا توجد وحدات مطابقة.' : 'No matching units.'}
-          </p>
+        {filteredUnits.length === 0 && !loading ? (
+          <EmptyState
+            title={t(translations.emptyTitle)}
+            description={t(translations.emptyDesc)}
+            actionLabel={t(translations.homeCta)}
+            actionTo="/"
+          />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredUnits.map((unit) => (
+              <RentalUnitCard key={unit.id} unit={unit} />
+            ))}
+          </div>
         )}
 
-        {canLoadMore && (
+        {canLoadMore && filteredUnits.length > 0 && (
           <div className="mt-10 flex justify-center">
             <Button
               variant="outline"
@@ -328,6 +351,18 @@ export default function RentalsPage() {
         )}
       </section>
 
+      <BrandPageClosing>
+        <h2 className="text-xl font-bold text-textPrimary sm:text-2xl">{t(translations.closingTitle)}</h2>
+        <p className="mx-auto mt-3 max-w-md text-sm text-textSecondary sm:text-base">{t(translations.closingDesc)}</p>
+        <Link
+          to="/contact"
+          className="mt-8 inline-flex items-center justify-center rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-white transition-all duration-300 hover:bg-gold hover:text-primary"
+        >
+          {t(translations.closingCta)}
+        </Link>
+      </BrandPageClosing>
+
+      </main>
       <Footer />
 
       <button

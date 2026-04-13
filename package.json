@@ -2,7 +2,7 @@
   "name": "real_estate_investment",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://keeper.in-brackets.online",
+  "proxy": "https://admin.yafel-properties.com",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -13,18 +13,19 @@
     "clsx": "^2.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.22.3",
+    "react-helmet-async": "^3.0.0",
     "react-hot-toast": "^2.4.1",
+    "react-router-dom": "^6.22.3",
     "swiper": "^11.1.15"
   },
   "devDependencies": {
-    "react-scripts": "5.0.1",
-    "react-app-rewired": "^2.2.1",
-    "customize-cra": "^1.0.0",
     "autoprefixer": "^10.4.20",
+    "customize-cra": "^1.0.0",
+    "eslint": "^8",
     "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.17",
-    "eslint": "^8"
+    "react-app-rewired": "^2.2.1",
+    "react-scripts": "5.0.1",
+    "tailwindcss": "^3.4.17"
   },
   "browserslist": {
     "production": [

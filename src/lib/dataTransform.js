@@ -1,5 +1,5 @@
 /** Default CDN for Laravel `storage` paths (override with `REACT_APP_STORAGE_BASE_URL`). */
-export const STORAGE_BASE_URL = 'https://keeper.in-brackets.online/storage';
+export const STORAGE_BASE_URL = 'https://admin.yafel-properties.com/storage';
 
 export function getStorageBaseUrl() {
   const env =

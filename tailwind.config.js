@@ -52,6 +52,25 @@ module.exports = {
         'gradient-dark': 'linear-gradient(135deg, #111111 0%, #3a3a3a 100%)',
         'gradient-gold': 'linear-gradient(135deg, #C9A96E 0%, #a88b52 100%)',
       },
+      keyframes: {
+        'mobile-nav-backdrop': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'mobile-nav-drawer-end': {
+          '0%': { opacity: '0', transform: 'translate3d(100%, 0, 0)' },
+          '100%': { opacity: '1', transform: 'translate3d(0, 0, 0)' },
+        },
+        'mobile-nav-drawer-start': {
+          '0%': { opacity: '0', transform: 'translate3d(-100%, 0, 0)' },
+          '100%': { opacity: '1', transform: 'translate3d(0, 0, 0)' },
+        },
+      },
+      animation: {
+        'mobile-nav-backdrop': 'mobile-nav-backdrop 0.28s ease-out forwards',
+        'mobile-nav-drawer-end': 'mobile-nav-drawer-end 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        'mobile-nav-drawer-start': 'mobile-nav-drawer-start 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+      },
     },
   },
   plugins: [],

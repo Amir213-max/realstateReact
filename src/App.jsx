@@ -1,36 +1,28 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import BackToTop from '@/components/BackToTop';
+import PageLoadingFallback from '@/components/PageLoadingFallback';
+import { lazyPage } from '@/lib/lazyPage';
 
-const Home = lazy(() => import('@/pages/Home'));
-const About = lazy(() => import('@/pages/About'));
-const Contact = lazy(() => import('@/pages/Contact'));
-const Properties = lazy(() => import('@/pages/Properties'));
-const PropertyDetail = lazy(() => import('@/pages/PropertyDetail'));
-const Projects = lazy(() => import('@/pages/Projects'));
-const ProjectDetail = lazy(() => import('@/pages/ProjectDetail'));
-const Destinations = lazy(() => import('@/pages/Destinations'));
-const DestinationDetail = lazy(() => import('@/pages/DestinationDetail'));
-const DeveloperDetail = lazy(() => import('@/pages/DeveloperDetail'));
-const UnitDetail = lazy(() => import('@/pages/UnitDetail'));
-const Offers = lazy(() => import('@/pages/Offers'));
-const Sell = lazy(() => import('@/pages/Sell'));
-const Rentals = lazy(() => import('@/pages/Rentals'));
-
-function PageFallback() {
-  return (
-    <div
-      style={{ minHeight: '60vh' }}
-      className="flex items-center justify-center bg-bgSection text-textSecondary"
-    >
-      Loading...
-    </div>
-  );
-}
+const Home = lazyPage(() => import('@/pages/Home'), 'Home');
+const About = lazyPage(() => import('@/pages/About'), 'About');
+const Contact = lazyPage(() => import('@/pages/Contact'), 'Contact');
+const Properties = lazyPage(() => import('@/pages/Properties'), 'Properties');
+const PropertyDetail = lazyPage(() => import('@/pages/PropertyDetail'), 'PropertyDetail');
+const Projects = lazyPage(() => import('@/pages/Projects'), 'Projects');
+const ProjectDetail = lazyPage(() => import('@/pages/ProjectDetail'), 'ProjectDetail');
+const Destinations = lazyPage(() => import('@/pages/Destinations'), 'Destinations');
+const DestinationDetail = lazyPage(() => import('@/pages/DestinationDetail'), 'DestinationDetail');
+const DeveloperDetail = lazyPage(() => import('@/pages/DeveloperDetail'), 'DeveloperDetail');
+const UnitDetail = lazyPage(() => import('@/pages/UnitDetail'), 'UnitDetail');
+const Offers = lazyPage(() => import('@/pages/Offers'), 'Offers');
+const Sell = lazyPage(() => import('@/pages/Sell'), 'Sell');
+const Rentals = lazyPage(() => import('@/pages/Rentals'), 'Rentals');
+const NotFound = lazyPage(() => import('@/pages/NotFound'), 'NotFound');
 
 export default function App() {
   return (
-    <Suspense fallback={<PageFallback />}>
+    <Suspense fallback={<PageLoadingFallback />}>
       <BackToTop />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -47,6 +39,7 @@ export default function App() {
         <Route path="/units/:id" element={<UnitDetail />} />
         <Route path="/offers" element={<Offers />} />
         <Route path="/sell" element={<Sell />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

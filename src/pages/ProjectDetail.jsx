@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Seo from '@/components/Seo';
+import EmptyState from '@/components/EmptyState';
 import ImageGallery from '@/components/ImageGallery';
 import Map from '@/components/Map';
 import UnitCard from '@/components/Cards/UnitCard';
@@ -20,16 +22,22 @@ export default function ProjectDetailPage() {
   const whatsappModal = useModal();
   const isRTL = language === 'ar';
 
+  const loadingTitle = language === 'ar' ? 'تفاصيل المشروع' : 'Project details';
+  const loadingDesc = language === 'ar' ? 'يافيل — عقارات فاخرة.' : 'Yafel — premium real estate.';
+
   if (projectLoading) {
     return (
       <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Seo title={loadingTitle} description={loadingDesc} />
         <Navbar />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4"></div>
-            <p className="text-textSecondary">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+        <main id="main-content" tabIndex={-1} className="outline-none">
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4"></div>
+              <p className="text-textSecondary">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
+            </div>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
@@ -40,12 +48,18 @@ export default function ProjectDetailPage() {
   if (!project) {
     return (
       <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+        <Seo
+          title={language === 'ar' ? 'المشروع غير موجود' : 'Project not found'}
+          description={loadingDesc}
+        />
         <Navbar />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <h1 className="text-2xl font-bold text-textPrimary">
-            {language === 'ar' ? 'المشروع غير موجود' : 'Project not found'}
-          </h1>
-        </div>
+        <main id="main-content" tabIndex={-1} className="outline-none">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+            <h1 className="text-2xl font-bold text-textPrimary">
+              {language === 'ar' ? 'المشروع غير موجود' : 'Project not found'}
+            </h1>
+          </div>
+        </main>
         <Footer />
       </div>
     );
@@ -56,12 +70,26 @@ export default function ProjectDetailPage() {
     location: { ar: 'الموقع', en: 'Location' },
     availableUnits: { ar: 'الوحدات المتاحة', en: 'Available Units' },
     legalConsultant: { ar: 'استشارة قانونية', en: 'Legal Consultant' },
+    emptyUnitsTitle: { ar: 'لا توجد وحدات', en: 'No units available' },
+    emptyUnitsDesc: {
+      ar: 'لا توجد وحدات مدرجة لهذا المشروع حالياً.',
+      en: 'There are no units listed for this project at the moment.',
+    },
+    browseCta: { ar: 'تصفح العقارات', en: 'Browse properties' },
   };
+
+  const pageTitle = t({ ar: project.name_ar, en: project.name_en });
+  const pageDesc = t({ ar: project.description_ar || '', en: project.description_en || '' })
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 160);
 
   return (
     <div className={`min-h-screen bg-bgSection ${isRTL ? 'rtl' : 'ltr'}`}>
+      <Seo title={pageTitle} description={pageDesc || loadingDesc} />
       <Navbar />
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-md p-8 mb-8">
@@ -113,14 +141,18 @@ export default function ProjectDetailPage() {
                 {language === 'ar' ? 'جاري التحميل...' : 'Loading...'}
               </p>
             ) : (
-              <p className="text-textSecondary text-center py-8">
-                {language === 'ar' ? 'لا توجد وحدات متاحة حالياً' : 'No units available at the moment'}
-              </p>
+              <EmptyState
+                title={t(translations.emptyUnitsTitle)}
+                description={t(translations.emptyUnitsDesc)}
+                actionLabel={t(translations.browseCta)}
+                actionTo="/properties"
+              />
             )}
           </div>
         </div>
       </section>
 
+      </main>
       <WhatsAppConsultantModal
         isOpen={whatsappModal.isOpen}
         onClose={whatsappModal.close}

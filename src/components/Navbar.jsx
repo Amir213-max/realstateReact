@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import Logo from '@/components/Logo';
@@ -15,6 +16,7 @@ export default function Navbar() {
   const isRTL = language === 'ar';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [mobileExpanded, setMobileExpanded] = useState(null);
   const [regionsCountryId, setRegionsCountryId] = useState('');
   const verifyConsultantModal = useModal();
 
@@ -36,6 +38,8 @@ export default function Navbar() {
     contact: { ar: 'اتصل بنا', en: 'Contact' },
     allCountries: { ar: 'كل الدول', en: 'All countries' },
     filterByCountry: { ar: 'تصفية حسب الدولة', en: 'Filter by country' },
+    mobileMenu: { ar: 'القائمة', en: 'Menu' },
+    closeMenu: { ar: 'إغلاق', en: 'Close' },
   };
 
   const mostSearchedItems = (projectsData || [])
@@ -45,7 +49,12 @@ export default function Navbar() {
   useEffect(() => {
     setIsMenuOpen(false);
     setOpenDropdown(null);
+    setMobileExpanded(null);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!isMenuOpen) setMobileExpanded(null);
+  }, [isMenuOpen]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
@@ -57,10 +66,37 @@ export default function Navbar() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isMenuOpen, openDropdown]);
 
+  useEffect(() => {
+    if (!isMenuOpen || typeof document === 'undefined') return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    if (!isMenuOpen || typeof document === 'undefined') return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setIsMenuOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [isMenuOpen]);
+
+  const skipLabel = language === 'ar' ? 'تخطي إلى المحتوى الرئيسي' : 'Skip to main content';
+
   return (
     <nav
       className={`bg-white text-textPrimary shadow-sm sticky top-0 z-50 border-b border-borderColor backdrop-blur-sm ${isRTL ? 'rtl' : 'ltr'}`}
+      aria-label={language === 'ar' ? 'التنقل الرئيسي' : 'Main navigation'}
     >
+      <a
+        href="#main-content"
+        className="fixed start-2 top-2 z-[100] -translate-y-24 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-primary shadow-md transition-transform focus:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+      >
+        {skipLabel}
+      </a>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
@@ -231,9 +267,11 @@ export default function Navbar() {
               {language === 'ar' ? 'EN' : 'AR'}
             </button>
             <button
+              type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 text-textPrimary hover:bg-bgSection rounded-lg transition-all duration-300 mobile-menu-container"
+              className="mobile-menu-container lg:hidden rounded-lg p-2 text-textPrimary transition-all duration-300 hover:bg-bgSection"
               aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
             >
               <svg className={`w-6 h-6 transition-transform duration-300 ${isMenuOpen ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMenuOpen ? (
@@ -251,6 +289,208 @@ export default function Navbar() {
         isOpen={verifyConsultantModal.isOpen} 
         onClose={verifyConsultantModal.close} 
       />
+
+      {typeof document !== 'undefined' &&
+        isMenuOpen &&
+        createPortal(
+          <div className={`fixed inset-0 z-[200] lg:hidden ${isRTL ? 'rtl' : 'ltr'}`}>
+            <button
+              type="button"
+              className="absolute inset-0 z-0 animate-mobile-nav-backdrop bg-black/50 backdrop-blur-md motion-reduce:animate-none motion-reduce:opacity-100"
+              aria-label={t(translations.closeMenu)}
+              onClick={() => setIsMenuOpen(false)}
+            />
+            <aside
+              role="dialog"
+              aria-modal="true"
+              aria-label={t(translations.mobileMenu)}
+              className={`mobile-menu-container absolute inset-y-0 z-10 flex w-[min(100%,20rem)] flex-col bg-white shadow-2xl will-change-transform ${
+                isRTL
+                  ? 'start-0 border-e border-borderColor animate-mobile-nav-drawer-start motion-reduce:animate-none motion-reduce:translate-x-0 motion-reduce:opacity-100'
+                  : 'end-0 border-s border-borderColor animate-mobile-nav-drawer-end motion-reduce:animate-none motion-reduce:translate-x-0 motion-reduce:opacity-100'
+              }`}
+            >
+                <div className="flex h-16 shrink-0 items-center justify-between border-b border-borderColor px-4">
+                  <span className="text-sm font-semibold text-textPrimary">{t(translations.mobileMenu)}</span>
+                  <button
+                    type="button"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="rounded-lg p-2 text-textSecondary hover:bg-bgSection hover:text-textPrimary"
+                    aria-label={t(translations.closeMenu)}
+                  >
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-3">
+                  <Link
+                    to="/"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                      pathname === '/' ? 'bg-bgSection text-primary ring-1 ring-borderColor' : 'text-textPrimary hover:bg-bgSection'
+                    }`}
+                  >
+                    {t(translations.home)}
+                  </Link>
+                  <div className="overflow-hidden rounded-xl border border-borderColor">
+                    <button
+                      type="button"
+                      aria-expanded={mobileExpanded === 'regions'}
+                      onClick={() => setMobileExpanded((prev) => (prev === 'regions' ? null : 'regions'))}
+                      className="flex w-full items-center justify-between gap-2 px-4 py-3 text-start text-sm font-medium text-textPrimary transition-colors hover:bg-bgSection"
+                    >
+                      <span>{t(translations.regions)}</span>
+                      <svg
+                        className={`h-4 w-4 shrink-0 transition-transform ${mobileExpanded === 'regions' ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {mobileExpanded === 'regions' && (
+                      <div className="space-y-3 border-t border-borderColor bg-bgSection/60 px-3 py-3">
+                        <div>
+                          <label className="mb-1.5 block text-xs text-textSecondary">{t(translations.filterByCountry)}</label>
+                          <select
+                            value={regionsCountryId}
+                            onChange={(e) => setRegionsCountryId(e.target.value)}
+                            className="w-full rounded-lg border border-borderColor bg-white px-2 py-2 text-sm text-textPrimary"
+                          >
+                            <option value="">{t(translations.allCountries)}</option>
+                            {navbarCountries.map((c) => (
+                              <option key={c.id} value={c.id}>
+                                {t({ ar: c.name_ar, en: c.name_en })}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="max-h-60 space-y-0.5 overflow-y-auto">
+                          {(regionsData || []).slice(0, 10).map((region) => (
+                            <Link
+                              key={region.id}
+                              to={`/destinations/${region.id}`}
+                              onClick={() => setIsMenuOpen(false)}
+                              className="block rounded-lg px-3 py-2 text-sm text-textPrimary transition-colors hover:bg-white hover:text-textPrimary"
+                            >
+                              {region ? t({ ar: region.name_ar || region.name, en: region.name_en || region.name }) : ''}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="overflow-hidden rounded-xl border border-borderColor">
+                    <button
+                      type="button"
+                      aria-expanded={mobileExpanded === 'developers'}
+                      onClick={() => setMobileExpanded((prev) => (prev === 'developers' ? null : 'developers'))}
+                      className="flex w-full items-center justify-between gap-2 px-4 py-3 text-start text-sm font-medium text-textPrimary transition-colors hover:bg-bgSection"
+                    >
+                      <span>{t(translations.developers)}</span>
+                      <svg
+                        className={`h-4 w-4 shrink-0 transition-transform ${mobileExpanded === 'developers' ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {mobileExpanded === 'developers' && (
+                      <div className="max-h-60 space-y-0.5 overflow-y-auto border-t border-borderColor bg-bgSection/60 px-2 py-2">
+                        {(developersData || []).slice(0, 10).map((developer) => (
+                          <Link
+                            key={developer.id}
+                            to={`/developers/${developer.id}`}
+                            onClick={() => setIsMenuOpen(false)}
+                            className="block rounded-lg px-3 py-2 text-sm text-textPrimary transition-colors hover:bg-white"
+                          >
+                            {developer ? t({ ar: developer.name_ar || developer.name, en: developer.name_en || developer.name }) : ''}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="overflow-hidden rounded-xl border border-borderColor">
+                    <button
+                      type="button"
+                      aria-expanded={mobileExpanded === 'compounds'}
+                      onClick={() => setMobileExpanded((prev) => (prev === 'compounds' ? null : 'compounds'))}
+                      className="flex w-full items-center justify-between gap-2 px-4 py-3 text-start text-sm font-medium text-textPrimary transition-colors hover:bg-bgSection"
+                    >
+                      <span>{t(translations.compounds)}</span>
+                      <svg
+                        className={`h-4 w-4 shrink-0 transition-transform ${mobileExpanded === 'compounds' ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {mobileExpanded === 'compounds' && (
+                      <div className="max-h-60 space-y-0.5 overflow-y-auto border-t border-borderColor bg-bgSection/60 px-2 py-2">
+                        {(projectsData || []).slice(0, 10).map((project) => (
+                          <Link
+                            key={project.id}
+                            to={`/projects/${project.id}`}
+                            onClick={() => setIsMenuOpen(false)}
+                            className="block rounded-lg px-3 py-2 text-sm text-textPrimary transition-colors hover:bg-white"
+                          >
+                            {project ? t({ ar: project.name_ar || project.name, en: project.name_en || project.name }) : ''}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <Link
+                    to="/properties"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="rounded-xl px-4 py-3 text-sm font-medium text-textPrimary transition-colors hover:bg-bgSection"
+                  >
+                    {t(translations.properties)}
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      verifyConsultantModal.open();
+                    }}
+                    className="rounded-xl px-4 py-3 text-start text-sm font-medium text-textPrimary transition-colors hover:bg-bgSection"
+                  >
+                    {t(translations.verifyConsultant)}
+                  </button>
+                  <Link
+                    to="/sell"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                      pathname === '/sell' ? 'bg-bgSection text-primary ring-1 ring-borderColor' : 'text-textPrimary hover:bg-bgSection'
+                    }`}
+                  >
+                    {t(translations.sell)}
+                  </Link>
+                  <Link
+                    to="/contact"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                      pathname === '/contact' ? 'bg-bgSection text-primary ring-1 ring-borderColor' : 'text-textPrimary hover:bg-bgSection'
+                    }`}
+                  >
+                    {t(translations.contact)}
+                  </Link>
+                </nav>
+            </aside>
+          </div>,
+          document.body
+        )}
     </nav>
   );
 }

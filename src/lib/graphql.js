@@ -15,25 +15,22 @@ function formatGraphQLErrors(errors) {
 
 const HTTP_ERROR_BODY_MAX = 400;
 
-let missingEndpointLogged = false;
+/**
+ * Override with `REACT_APP_GRAPHQL_ENDPOINT` in `.env` when needed.
+ * Development default `/graphql` uses CRA `package.json` proxy (same-origin, no CORS).
+ */
+const DEFAULT_GRAPHQL_ENDPOINT_PRODUCTION = 'https://admin.yafel-properties.com/graphql';
+const DEFAULT_GRAPHQL_ENDPOINT_DEVELOPMENT = '/graphql';
 
 export function getGraphqlEndpoint() {
   const v = process.env.REACT_APP_GRAPHQL_ENDPOINT;
-  return typeof v === 'string' && v.trim() !== '' ? v.trim() : null;
+  if (typeof v === 'string' && v.trim() !== '') return v.trim();
+  if (process.env.NODE_ENV === 'development') return DEFAULT_GRAPHQL_ENDPOINT_DEVELOPMENT;
+  return DEFAULT_GRAPHQL_ENDPOINT_PRODUCTION;
 }
 
 export async function graphqlRequest(query, variables = {}) {
   const endpoint = getGraphqlEndpoint();
-  if (!endpoint) {
-    const err = new Error(
-      'REACT_APP_GRAPHQL_ENDPOINT is not set. Add it to your .env file (see .env.example).'
-    );
-    if (!missingEndpointLogged) {
-      missingEndpointLogged = true;
-      console.error(err.message);
-    }
-    throw err;
-  }
 
   const operationNameLabel = getOperationName(query);
   const operationType = getOperationType(query);

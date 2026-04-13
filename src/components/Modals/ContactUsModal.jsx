@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useId } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import toast from 'react-hot-toast';
 import Button from '@/components/ui/Button';
@@ -8,6 +8,16 @@ export default function ContactUsModal({ isOpen, onClose }) {
   const [phone, setPhone] = useState('');
   const [comment, setComment] = useState('');
   const isRTL = language === 'ar';
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
 
   const translations = {
     title: { ar: 'اتصل بنا', en: 'Contact Us' },
@@ -19,6 +29,7 @@ export default function ContactUsModal({ isOpen, onClose }) {
     success: { ar: 'تم إرسال طلبك بنجاح', en: 'Your request has been sent successfully' },
     phonePlaceholder: { ar: '05xxxxxxxx', en: '05xxxxxxxx' },
     commentPlaceholder: { ar: 'اكتب تعليقك هنا...', en: 'Write your comment here...' },
+    closeLabel: { ar: 'إغلاق', en: 'Close' },
   };
 
   const handleSubmit = (e) => {
@@ -37,15 +48,19 @@ export default function ContactUsModal({ isOpen, onClose }) {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn"
       onClick={onClose}
+      role="presentation"
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         className={`bg-white rounded-2xl shadow-2xl w-full  mx-auto max-h-[90vh] overflow-y-auto animate-slideUp ${isRTL ? 'rtl' : 'ltr'}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6 sm:p-8">
           <div className="flex items-center justify-between mb-6 pb-6 border-b border-borderColor">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-textPrimary mb-1">
+              <h2 id={titleId} className="text-2xl sm:text-3xl font-bold text-textPrimary mb-1">
                 {t(translations.title)}
               </h2>
               <p className="text-sm sm:text-base text-textSecondary">
@@ -53,9 +68,10 @@ export default function ContactUsModal({ isOpen, onClose }) {
               </p>
             </div>
             <button
+              type="button"
               onClick={onClose}
               className="text-textSecondary hover:text-textPrimary transition-all duration-200 p-2 hover:bg-bgSection rounded-lg flex-shrink-0"
-              aria-label="Close"
+              aria-label={t(translations.closeLabel)}
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
