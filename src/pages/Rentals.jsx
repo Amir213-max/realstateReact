@@ -368,7 +368,7 @@ export default function RentalsPage() {
       <button
         type="button"
         onClick={() => setRentModalOpen(true)}
-        className={`fixed bottom-8 z-40 flex items-center gap-2 px-4 py-3 rounded-xl bg-sky-500 text-white shadow-lg hover:bg-sky-600 font-semibold text-sm ${
+        className={`fixed bottom-24 z-40 flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-sky-600 ${
           isRTL ? 'left-4 md:left-8' : 'right-4 md:right-8'
         }`}
       >

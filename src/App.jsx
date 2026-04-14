@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import BackToTop from '@/components/BackToTop';
+import WhatsAppFloatFab from '@/components/WhatsAppFloatFab';
 import PageLoadingFallback from '@/components/PageLoadingFallback';
 import { lazyPage } from '@/lib/lazyPage';
 
@@ -24,6 +25,7 @@ export default function App() {
   return (
     <Suspense fallback={<PageLoadingFallback />}>
       <BackToTop />
+      <WhatsAppFloatFab />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
